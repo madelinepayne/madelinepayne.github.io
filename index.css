@@ -1,0 +1,33 @@
+body {
+        background: #FFF8DC;
+        font-family: Rockwell;
+        text-align: center;
+}
+
+.main {
+        text-align: center;
+        top: 50px;
+        font-size: 27px;
+}
+.main img {
+        height: 360px;
+        width: auto;
+        top: 100px;
+        
+}
+
+.link_box {
+        display: inline-block;
+        height: 10%;
+        width: 25%;
+        margin: 10px;
+        /*background-color: #99ccff;*/
+        font-size: 30px;
+        text-align: center;
+        /*margin: auto;
+        position: absolute;
+        top: 120px;
+        left: 0;
+        bottom: 0;
+        right: 0;*/
+}

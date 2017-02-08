@@ -1,0 +1,48 @@
+body {
+        background: #FFF8DC;
+        font-family: Rockwell;
+        text-align: left;
+        
+}
+
+ul {
+        list-style-position: inside;
+        list-style-type: square;
+}
+
+.personal_info {
+        border-width: 2px;
+        border-style: dashed;
+        border-color: #00008B;
+        padding-left: 10px;
+}
+
+.education {
+        border-width: 2px;
+        border-style: dashed;
+        border-color: #00008B;
+        padding-left: 10px;
+}
+
+
+.experience {
+        border-width: 2px;
+        border-style: dashed;
+        border-color: #00008B;
+        padding-left: 10px;
+}
+
+.skills {
+        border-width: 2px;
+        border-style: dashed;
+        border-color: #00008B;
+        padding-left: 10px;
+}
+
+.activities {
+        border-width: 2px;
+        border-style: dashed;
+        border-color: #00008B;
+        padding-left: 10px;
+}
+

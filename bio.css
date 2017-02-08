@@ -1,0 +1,22 @@
+body {
+        background: #FFF8DC;
+        font-family: Rockwell;
+        text-align: center;
+}
+
+.text {
+        display: inline-block;
+        width: 75%;
+        height: auto;
+        border-width: 5px;
+        border-style: dashed;
+        border-color: #00008B;
+        padding: 15px;
+}
+
+.linkbox {
+        display: inline-block;
+        width: 25%;
+        height: auto;
+        padding: 10px;
+}

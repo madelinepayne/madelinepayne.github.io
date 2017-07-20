@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300');
+body {
+    background: white;
+    font-family: Lato, sans-serif;
+/*    text-align: center;
+*/}
+
+.main {
+    padding-top: 20px;
+}
+
+ul.navbar-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    letter-spacing: 2px;
+}
+
+
+.links {
+    text-align: left;
+}
+
+.code {
+    text-align: left;
+    float: left;
+    -moz-box-sizing: border-box;
+}
+
+.header {
+        text-align: center;
+}
+

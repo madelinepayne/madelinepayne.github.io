@@ -1,0 +1,388 @@
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #888888">/*</span>
+<span style="color: #888888">    uarray2_b.c</span>
+<span style="color: #888888">    By: Madeline Payne</span>
+<span style="color: #888888">    Implementation for the uarray2 class. A uarray2 is a 2 dimensional dynamic</span>
+<span style="color: #888888">    array where each element is type void *. It is mapped by block, in an </span>
+<span style="color: #888888">    attempt to utilize the concept of locality to speed up the program.</span>
+<span style="color: #888888"> */</span>
+<span style="color: #557799">#include &lt;stdio.h&gt;</span>
+<span style="color: #557799">#include &lt;stdlib.h&gt;</span>
+<span style="color: #557799">#include &lt;assert.h&gt;</span>
+<span style="color: #557799">#include &lt;math.h&gt;</span>
+<span style="color: #557799">#include &quot;uarray.h&quot;</span>
+<span style="color: #557799">#include &quot;uarray2.h&quot;</span>
+<span style="color: #557799">#include &quot;uarray2b.h&quot;</span>
+<span style="color: #557799">#define T UArray2b_T</span>
+
+<span style="color: #008800; font-weight: bold">struct</span> T {
+        <span style="color: #333399; font-weight: bold">int</span> blocksize;
+        <span style="color: #333399; font-weight: bold">int</span> height;
+        <span style="color: #333399; font-weight: bold">int</span> width;
+        <span style="color: #333399; font-weight: bold">int</span> size;
+        <span style="color: #333399; font-weight: bold">int</span> arrWidth;
+        <span style="color: #333399; font-weight: bold">int</span> arrHeight;
+        UArray2_T blockVector;
+};
+
+<span style="color: #008800; font-weight: bold">typedef</span> <span style="color: #008800; font-weight: bold">struct</span> initBlockInfo {
+        <span style="color: #333399; font-weight: bold">int</span> blocksize;
+        <span style="color: #333399; font-weight: bold">int</span> size;
+} initBlockInfo;
+
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">initBlocks</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, UArray2_T data, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span> elem, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl);
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">freeUArray</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, UArray2_T data, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span> elem, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl);
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">add</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, UArray2b_T data, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span> elem, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl);
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">print</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, UArray2b_T data, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span> elem, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl);
+
+<span style="color: #888888">/*</span>
+<span style="color: #888888">* new blocked 2d array</span>
+<span style="color: #888888">* blocksize = square root of # of cells in block.</span>
+<span style="color: #888888">* blocksize &lt; 1 is a checked runtime error</span>
+<span style="color: #888888">*/</span>
+<span style="color: #008800; font-weight: bold">extern</span> T <span style="color: #0066BB; font-weight: bold">UArray2b_new</span> (<span style="color: #333399; font-weight: bold">int</span> width, <span style="color: #333399; font-weight: bold">int</span> height, <span style="color: #333399; font-weight: bold">int</span> size, <span style="color: #333399; font-weight: bold">int</span> blocksize)
+{
+        assert((width <span style="color: #333333">&gt;</span> <span style="color: #0000DD; font-weight: bold">0</span>) <span style="color: #333333">&amp;&amp;</span> (height <span style="color: #333333">&gt;</span> <span style="color: #0000DD; font-weight: bold">0</span>) <span style="color: #333333">&amp;&amp;</span>
+                (size <span style="color: #333333">&gt;</span> <span style="color: #0000DD; font-weight: bold">0</span>) <span style="color: #333333">&amp;&amp;</span> (blocksize <span style="color: #333333">&gt;=</span> <span style="color: #0000DD; font-weight: bold">1</span>));
+        T array2b <span style="color: #333333">=</span> malloc(<span style="color: #008800; font-weight: bold">sizeof</span>(<span style="color: #333333">*</span>array2b));
+
+        <span style="color: #333399; font-weight: bold">int</span> arrWidth <span style="color: #333333">=</span> ceil((<span style="color: #333399; font-weight: bold">double</span>)width <span style="color: #333333">/</span> (<span style="color: #333399; font-weight: bold">double</span>)blocksize);
+        <span style="color: #333399; font-weight: bold">int</span> arrHeight <span style="color: #333333">=</span> ceil((<span style="color: #333399; font-weight: bold">double</span>)height <span style="color: #333333">/</span> (<span style="color: #333399; font-weight: bold">double</span>)blocksize);
+        <span style="color: #008800; font-weight: bold">struct</span> initBlockInfo cl <span style="color: #333333">=</span> {blocksize, size};
+
+        array2b<span style="color: #333333">-&gt;</span>blockVector <span style="color: #333333">=</span>
+                UArray2_new((<span style="color: #333399; font-weight: bold">int</span>)arrWidth, (<span style="color: #333399; font-weight: bold">int</span>)arrHeight,
+                            <span style="color: #008800; font-weight: bold">sizeof</span>(UArray_T));
+        array2b<span style="color: #333333">-&gt;</span>blocksize <span style="color: #333333">=</span> blocksize;
+        array2b<span style="color: #333333">-&gt;</span>width <span style="color: #333333">=</span> width;
+        array2b<span style="color: #333333">-&gt;</span>height <span style="color: #333333">=</span> height;
+        array2b<span style="color: #333333">-&gt;</span>size <span style="color: #333333">=</span> size;
+        array2b<span style="color: #333333">-&gt;</span>arrWidth <span style="color: #333333">=</span> arrWidth;
+        array2b<span style="color: #333333">-&gt;</span>arrHeight <span style="color: #333333">=</span> arrHeight;
+
+        UArray2_map_col_major(array2b<span style="color: #333333">-&gt;</span>blockVector, initBlocks, <span style="color: #333333">&amp;</span>cl);
+        <span style="color: #008800; font-weight: bold">return</span> array2b;
+}
+
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">initBlocks</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, UArray2_T data, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span> elem, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl)
+{
+        (<span style="color: #333399; font-weight: bold">void</span>)col;
+        (<span style="color: #333399; font-weight: bold">void</span>)row;
+        (<span style="color: #333399; font-weight: bold">void</span>)data;
+        initBlockInfo <span style="color: #333333">*</span>blockInfo <span style="color: #333333">=</span> cl;
+        <span style="color: #333333">*</span>(UArray_T<span style="color: #333333">*</span>)elem <span style="color: #333333">=</span>
+                UArray_new(blockInfo<span style="color: #333333">-&gt;</span>blocksize <span style="color: #333333">*</span> blockInfo<span style="color: #333333">-&gt;</span>blocksize,
+                           blockInfo<span style="color: #333333">-&gt;</span>size);
+}
+
+<span style="color: #888888">/* new blocked 2d array: blocksize as large as possible provided</span>
+<span style="color: #888888">* block occupies at most 64KB (if possible)</span>
+<span style="color: #888888">*/</span>
+<span style="color: #008800; font-weight: bold">extern</span> T <span style="color: #0066BB; font-weight: bold">UArray2b_new_64K_block</span>(<span style="color: #333399; font-weight: bold">int</span> width, <span style="color: #333399; font-weight: bold">int</span> height, <span style="color: #333399; font-weight: bold">int</span> size)
+{
+        <span style="color: #333399; font-weight: bold">int</span> cellCount <span style="color: #333333">=</span> floor((<span style="color: #0000DD; font-weight: bold">64</span> <span style="color: #333333">*</span> <span style="color: #0000DD; font-weight: bold">1024</span>) <span style="color: #333333">/</span> size);
+        <span style="color: #333399; font-weight: bold">int</span> blocksize <span style="color: #333333">=</span> sqrt(cellCount);
+        T array2b <span style="color: #333333">=</span> UArray2b_new(width, height, size, blocksize);
+        <span style="color: #008800; font-weight: bold">return</span> array2b;
+}
+<span style="color: #008800; font-weight: bold">extern</span> <span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">UArray2b_free</span> (T <span style="color: #333333">*</span>array2b_p)
+{
+        UArray2b_T array2b <span style="color: #333333">=</span> <span style="color: #333333">*</span>array2b_p;
+        assert((array2b_p <span style="color: #333333">!=</span> <span style="color: #007020">NULL</span>) <span style="color: #333333">&amp;&amp;</span> (array2b <span style="color: #333333">!=</span> <span style="color: #007020">NULL</span>));
+        
+        UArray2_map_col_major(array2b<span style="color: #333333">-&gt;</span>blockVector, freeUArray, <span style="color: #007020">NULL</span>);
+        UArray2_free(<span style="color: #333333">&amp;</span>(array2b<span style="color: #333333">-&gt;</span>blockVector));
+        free(array2b);
+        <span style="color: #333333">*</span>array2b_p <span style="color: #333333">=</span> <span style="color: #007020">NULL</span>;
+}
+
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">freeUArray</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, UArray2_T data, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span> elem, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl)
+{
+        (<span style="color: #333399; font-weight: bold">void</span>)col;
+        (<span style="color: #333399; font-weight: bold">void</span>)row;
+        (<span style="color: #333399; font-weight: bold">void</span>)data;
+        (<span style="color: #333399; font-weight: bold">void</span>)cl;
+        UArray_free((UArray_T<span style="color: #333333">*</span>)elem);
+}
+
+<span style="color: #008800; font-weight: bold">extern</span> <span style="color: #333399; font-weight: bold">int</span> <span style="color: #0066BB; font-weight: bold">UArray2b_width</span> (T array2b)
+{
+        assert(array2b <span style="color: #333333">!=</span> <span style="color: #007020">NULL</span>);
+        <span style="color: #008800; font-weight: bold">return</span> array2b<span style="color: #333333">-&gt;</span>width;
+}
+<span style="color: #008800; font-weight: bold">extern</span> <span style="color: #333399; font-weight: bold">int</span> <span style="color: #0066BB; font-weight: bold">UArray2b_height</span> (T array2b)
+{
+        assert(array2b <span style="color: #333333">!=</span> <span style="color: #007020">NULL</span>);
+        <span style="color: #008800; font-weight: bold">return</span> array2b<span style="color: #333333">-&gt;</span>height;
+
+}
+<span style="color: #008800; font-weight: bold">extern</span> <span style="color: #333399; font-weight: bold">int</span> <span style="color: #0066BB; font-weight: bold">UArray2b_size</span> (T array2b)
+{
+        assert(array2b <span style="color: #333333">!=</span> <span style="color: #007020">NULL</span>);
+        <span style="color: #008800; font-weight: bold">return</span> array2b<span style="color: #333333">-&gt;</span>size;
+}
+<span style="color: #008800; font-weight: bold">extern</span> <span style="color: #333399; font-weight: bold">int</span> <span style="color: #0066BB; font-weight: bold">UArray2b_blocksize</span>(T array2b)
+{
+        assert(array2b <span style="color: #333333">!=</span> <span style="color: #007020">NULL</span>);
+        <span style="color: #008800; font-weight: bold">return</span> array2b<span style="color: #333333">-&gt;</span>blocksize;
+}
+<span style="color: #888888">/* return a pointer to the cell in the given column and row.</span>
+<span style="color: #888888">* index out of range is a checked run-time error</span>
+<span style="color: #888888">*/</span>
+<span style="color: #008800; font-weight: bold">extern</span> <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span><span style="color: #0066BB; font-weight: bold">UArray2b_at</span>(T array2b, <span style="color: #333399; font-weight: bold">int</span> column, <span style="color: #333399; font-weight: bold">int</span> row)
+{
+        <span style="color: #888888">// figure out which block, then how far into block it is</span>
+        <span style="color: #888888">// given an x,y, ex. (6,2) --&gt; (1,0)</span>
+        <span style="color: #888888">// 6 / blocksize -&gt; 1</span>
+        <span style="color: #888888">// 2 / blocksize -&gt; 0</span>
+        <span style="color: #888888">// element location: 6%blocksize;</span>
+        <span style="color: #888888">// 6%4 = 2;</span>
+        <span style="color: #888888">// 2%4 = 2;</span>
+        <span style="color: #888888">// index = (height * x) + y</span>
+        assert(array2b <span style="color: #333333">!=</span> <span style="color: #007020">NULL</span>);
+        <span style="color: #888888">// fprintf(stderr, &quot;col: %d row: %d\n&quot;,column, row);</span>
+        assert((column <span style="color: #333333">&lt;</span> array2b<span style="color: #333333">-&gt;</span>width) <span style="color: #333333">&amp;&amp;</span> (row <span style="color: #333333">&lt;</span> array2b<span style="color: #333333">-&gt;</span>height)
+                <span style="color: #333333">&amp;&amp;</span> (column <span style="color: #333333">&gt;=</span> <span style="color: #0000DD; font-weight: bold">0</span>) <span style="color: #333333">&amp;&amp;</span> (row <span style="color: #333333">&gt;=</span> <span style="color: #0000DD; font-weight: bold">0</span>));
+        UArray_T <span style="color: #333333">*</span>currArray <span style="color: #333333">=</span>
+                UArray2_at(array2b<span style="color: #333333">-&gt;</span>blockVector, (<span style="color: #333399; font-weight: bold">float</span>)column <span style="color: #333333">/</span>
+                           array2b<span style="color: #333333">-&gt;</span>blocksize,
+                           (<span style="color: #333399; font-weight: bold">float</span>)row <span style="color: #333333">/</span> array2b<span style="color: #333333">-&gt;</span>blocksize);
+        <span style="color: #333399; font-weight: bold">int</span> elemCol <span style="color: #333333">=</span> column <span style="color: #333333">%</span> array2b<span style="color: #333333">-&gt;</span>blocksize;
+        <span style="color: #333399; font-weight: bold">int</span> elemRow <span style="color: #333333">=</span> row <span style="color: #333333">%</span> array2b<span style="color: #333333">-&gt;</span>blocksize;
+        <span style="color: #333399; font-weight: bold">int</span> index <span style="color: #333333">=</span> ((array2b<span style="color: #333333">-&gt;</span>blocksize <span style="color: #333333">*</span> elemCol) <span style="color: #333333">+</span> elemRow);
+        <span style="color: #008800; font-weight: bold">return</span> UArray_at(<span style="color: #333333">*</span>currArray, index);
+}
+
+<span style="color: #888888">/* visits every cell in one block before moving to another block */</span>
+<span style="color: #008800; font-weight: bold">extern</span> <span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">UArray2b_map</span>(T array2b,
+                         <span style="color: #333399; font-weight: bold">void</span> apply(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, T array2b,
+                                    <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>elem, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl),
+                         <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl)
+{
+        assert(array2b <span style="color: #333333">!=</span> <span style="color: #007020">NULL</span>);
+        T t <span style="color: #333333">=</span> array2b;
+        <span style="color: #333399; font-weight: bold">int</span> blocksize <span style="color: #333333">=</span> t<span style="color: #333333">-&gt;</span>blocksize;
+        <span style="color: #333399; font-weight: bold">int</span> currArrLength <span style="color: #333333">=</span> blocksize <span style="color: #333333">*</span> blocksize;
+        <span style="color: #008800; font-weight: bold">for</span> (<span style="color: #333399; font-weight: bold">int</span> i <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>; i <span style="color: #333333">&lt;</span> t<span style="color: #333333">-&gt;</span>arrWidth; i<span style="color: #333333">++</span>) {
+                <span style="color: #008800; font-weight: bold">for</span> (<span style="color: #333399; font-weight: bold">int</span> j <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>; j <span style="color: #333333">&lt;</span> t<span style="color: #333333">-&gt;</span>arrHeight; j<span style="color: #333333">++</span>) {
+                        UArray_T <span style="color: #333333">*</span>currArray <span style="color: #333333">=</span>
+                                UArray2_at(t<span style="color: #333333">-&gt;</span>blockVector, i, j);
+                        <span style="color: #008800; font-weight: bold">for</span> (<span style="color: #333399; font-weight: bold">int</span> k <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>; k <span style="color: #333333">&lt;</span> currArrLength; k<span style="color: #333333">++</span>) {
+                                <span style="color: #333399; font-weight: bold">int</span> elemCol <span style="color: #333333">=</span> (i <span style="color: #333333">*</span> blocksize) <span style="color: #333333">+</span>
+                                                (k <span style="color: #333333">%</span> blocksize);
+                                <span style="color: #333399; font-weight: bold">int</span> elemRow <span style="color: #333333">=</span> (j <span style="color: #333333">*</span> blocksize) <span style="color: #333333">+</span>
+                                                (k <span style="color: #333333">/</span> blocksize);
+                                <span style="color: #008800; font-weight: bold">if</span> ((elemCol <span style="color: #333333">&lt;</span> t<span style="color: #333333">-&gt;</span>width) <span style="color: #333333">&amp;&amp;</span>
+                                        (elemCol <span style="color: #333333">&gt;=</span> <span style="color: #0000DD; font-weight: bold">0</span>) <span style="color: #333333">&amp;&amp;</span>
+                                        (elemRow <span style="color: #333333">&lt;</span> t<span style="color: #333333">-&gt;</span>height) <span style="color: #333333">&amp;&amp;</span>
+                                        (elemRow <span style="color: #333333">&gt;=</span> <span style="color: #0000DD; font-weight: bold">0</span>)) {
+                                        <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>elem <span style="color: #333333">=</span>
+                                                UArray_at(<span style="color: #333333">*</span>currArray, k);
+                                        apply(elemCol, elemRow,
+                                                array2b, elem, cl);
+                                }
+                        }
+                }
+
+        }
+}
+
+<span style="color: #888888">/*</span>
+<span style="color: #888888">* it is a checked run-time error to pass a NULL T</span>
+<span style="color: #888888">* to any function in this interface</span>
+<span style="color: #888888">*/</span>
+
+<span style="color: #557799">#undef T</span>
+</pre></td></tr></table></div>

@@ -1,0 +1,457 @@
+<!-- HTML generated using hilite.me -->
+<title>main.cpp</title>
+<header>
+    <link rel="stylesheet" href="main_cpp.css">
+</header>
+<div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #888888">/*</span>
+<span style="color: #888888">    Degrees</span>
+<span style="color: #888888">    By: Madeline Payne</span>
+<span style="color: #888888">    In this program, files are read in, and the information is parsed and</span>
+<span style="color: #888888">    stored. Each line of a file contains a name, a computer course that they</span>
+<span style="color: #888888">    have taken or TA&#39;d, and the semester. Then, executes any of the commands</span>
+<span style="color: #888888">    as specified by the user, such as listing the classes, or finding the</span>
+<span style="color: #888888">    shortest path between any two people.</span>
+<span style="color: #888888"> */</span>
+
+<span style="color: #557799">#include &lt;iostream&gt;</span>
+<span style="color: #557799">#include &lt;string&gt;</span>
+<span style="color: #557799">#include &lt;fstream&gt;</span>
+<span style="color: #557799">#include &lt;vector&gt;</span>
+<span style="color: #557799">#include &lt;assert.h&gt;</span>
+<span style="color: #557799">#include &lt;sstream&gt;</span>
+<span style="color: #557799">#include &quot;StudentList.h&quot;</span>
+<span style="color: #557799">#include &quot;CourseList.h&quot;</span>
+<span style="color: #557799">#include &quot;Person.h&quot;</span>
+<span style="color: #557799">#include &quot;Path.h&quot;</span>
+using namespace std;
+
+<span style="color: #888888">// purpose: carries out the necessary steps to print the list of all students</span>
+<span style="color: #888888">// args: StudentList students (masterlist of all students)</span>
+<span style="color: #888888">// rets: none</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">ls</span>(StudentList <span style="color: #333333">&amp;</span>students)
+{
+    students.print_list();
+}
+<span style="color: #888888">// purpose: carries out necessary steps to print the list of all courses</span>
+<span style="color: #888888">// args: CourseList courses (masterlist of all courses)</span>
+<span style="color: #888888">// rets: none</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">lc</span>(CourseList <span style="color: #333333">&amp;</span>courses)
+{
+    courses.print_list();
+}
+
+<span style="color: #888888">// purpose: first &quot;finds&quot; student with that string for a name which returns</span>
+<span style="color: #888888">// an instance of the Person class, then prints the list of all courses that</span>
+<span style="color: #888888">// that Person has taed. Prints error message if student doesn&#39;t exist.</span>
+<span style="color: #888888">// args: StudentList, string</span>
+<span style="color: #888888">// rets: none</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">taed</span>(StudentList <span style="color: #333333">&amp;</span>students, string student)
+{
+    Person <span style="color: #333333">*</span>temp <span style="color: #333333">=</span> students.find(student);
+    <span style="color: #008800; font-weight: bold">if</span> (temp <span style="color: #333333">!=</span> <span style="color: #007020">NULL</span>) {
+        temp<span style="color: #333333">-&gt;</span>taed.print_list();
+    } <span style="color: #008800; font-weight: bold">else</span> {
+        cout <span style="color: #333333">&lt;&lt;</span> <span style="background-color: #fff0f0">&quot;Student not found&quot;</span> <span style="color: #333333">&lt;&lt;</span> endl;
+    }
+
+}
+
+<span style="color: #888888">// purpose: first &quot;finds&quot; course with that string for an ID which returns</span>
+<span style="color: #888888">// an instance of the Course class, then prints the list of all students that</span>
+<span style="color: #888888">// that took the Course. Prints error message if course doesn&#39;t exist.</span>
+<span style="color: #888888">// args: CourseList, string</span>
+<span style="color: #888888">// rets: none</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">roster</span>(CourseList <span style="color: #333333">&amp;</span>courses, string course_ID)
+{
+    Course <span style="color: #333333">*</span>temp <span style="color: #333333">=</span> courses.find(course_ID);
+    <span style="color: #008800; font-weight: bold">if</span> (temp <span style="color: #333333">!=</span> <span style="color: #007020">NULL</span>) {
+        temp<span style="color: #333333">-&gt;</span>roster.print_list();
+    } <span style="color: #008800; font-weight: bold">else</span> {
+        cout <span style="color: #333333">&lt;&lt;</span> <span style="background-color: #fff0f0">&quot;Course not found&quot;</span> <span style="color: #333333">&lt;&lt;</span> endl;
+    }
+
+}
+
+<span style="color: #888888">// purpose: &quot;finds&quot; the two people by returning their instances of the Person</span>
+<span style="color: #888888">// class, if either one of their pointers points to NULL, the person doesn&#39;t</span>
+<span style="color: #888888">// exist so print an error message. Otherwise, find the paths between these</span>
+<span style="color: #888888">// two people.</span>
+<span style="color: #888888">// args: StudentList, string, string, vector&lt;Path&gt;</span>
+<span style="color: #888888">// rets: none</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">paths</span>(StudentList <span style="color: #333333">&amp;</span>students, string input_a, string input_b, vector<span style="color: #333333">&lt;</span>Path<span style="color: #333333">&gt;</span>
+           <span style="color: #333333">&amp;</span>found_paths)
+{
+    Person <span style="color: #333333">*</span>a <span style="color: #333333">=</span> students.find(input_a);
+    Person <span style="color: #333333">*</span>b <span style="color: #333333">=</span> students.find(input_b);
+    Path path;
+
+    <span style="color: #008800; font-weight: bold">if</span> (a <span style="color: #333333">==</span> <span style="color: #007020">NULL</span> <span style="color: #333333">||</span> b <span style="color: #333333">==</span> <span style="color: #007020">NULL</span>) { <span style="color: #888888">// checking if both students exist</span>
+        cout <span style="color: #333333">&lt;&lt;</span> <span style="background-color: #fff0f0">&quot;Student not found&quot;</span> <span style="color: #333333">&lt;&lt;</span> endl;
+    } <span style="color: #008800; font-weight: bold">else</span> {
+        a<span style="color: #333333">-&gt;</span>find_path(b, path, found_paths);
+    }
+}
+
+<span style="color: #888888">// purpose: Compares the sizes of all the paths in the found_paths vector to</span>
+<span style="color: #888888">// see which is the smallest, then prints the smallest</span>
+<span style="color: #888888">// args: vector&lt;Path&gt;</span>
+<span style="color: #888888">// rets: none</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">shortestpath</span>(vector<span style="color: #333333">&lt;</span>Path<span style="color: #333333">&gt;</span> <span style="color: #333333">&amp;</span>found_paths)
+{
+    <span style="color: #008800; font-weight: bold">if</span> (found_paths.size() <span style="color: #333333">==</span> <span style="color: #0000DD; font-weight: bold">0</span>) {
+        <span style="color: #008800; font-weight: bold">return</span>;
+    }
+
+    Path <span style="color: #333333">*</span>min <span style="color: #333333">=</span> <span style="color: #333333">&amp;</span>found_paths[<span style="color: #0000DD; font-weight: bold">0</span>];
+
+    <span style="color: #888888">// start at 1 to not compare min to itself</span>
+    <span style="color: #008800; font-weight: bold">for</span> (<span style="color: #333399; font-weight: bold">unsigned</span> <span style="color: #333399; font-weight: bold">long</span> i <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">1</span>; i <span style="color: #333333">&lt;</span> found_paths.size(); i<span style="color: #333333">++</span>) {
+        <span style="color: #333399; font-weight: bold">int</span> path_size <span style="color: #333333">=</span> found_paths[i].get_size();
+        <span style="color: #008800; font-weight: bold">if</span> (path_size <span style="color: #333333">&lt;</span> min<span style="color: #333333">-&gt;</span>get_size()) {
+            min <span style="color: #333333">=</span> <span style="color: #333333">&amp;</span>found_paths[i];
+        }
+    }
+    min<span style="color: #333333">-&gt;</span>print_path();
+}
+
+
+<span style="color: #888888">// purpose: reads in the command that the user inputs and separates into strings</span>
+<span style="color: #888888">// (if necessary) by whitespace. Obviously that isn&#39;t necessary for ls and lc</span>
+<span style="color: #888888">// but for the rest at least one other word is inputted. Then compare the</span>
+<span style="color: #888888">// command to a string, and thus call the relevant function. For path, I took</span>
+<span style="color: #888888">// the for loop that printed the paths out of paths function so that I could</span>
+<span style="color: #888888">// call the path function for shortestpath too. If no paths are found, nothing</span>
+<span style="color: #888888">// will print so this is not an issue.</span>
+<span style="color: #888888">// args: StudentList, CourseList</span>
+<span style="color: #888888">// rets: true if command executed, false if not</span>
+<span style="color: #333399; font-weight: bold">bool</span> <span style="color: #0066BB; font-weight: bold">readCommand</span>(StudentList <span style="color: #333333">&amp;</span>students, CourseList <span style="color: #333333">&amp;</span>courses)
+{
+    string temp, input_a, input_b, line;
+    <span style="color: #008800; font-weight: bold">if</span> (<span style="color: #333333">!</span>getline(cin, line)) {
+        <span style="color: #008800; font-weight: bold">return</span> <span style="color: #007020">false</span>;
+    }
+    stringstream ss(line);
+    string command;
+    getline(ss, command, <span style="color: #0044DD">&#39; &#39;</span>); <span style="color: #888888">// string command = first word inputted</span>
+    getline(ss, input_a, <span style="color: #0044DD">&#39; &#39;</span>); <span style="color: #888888">// string input_a = second word inputted</span>
+    getline(ss, input_b, <span style="color: #0044DD">&#39; &#39;</span>); <span style="color: #888888">// string input_b = third word inputted</span>
+
+    <span style="color: #008800; font-weight: bold">if</span> (command <span style="color: #333333">==</span> <span style="background-color: #fff0f0">&quot;ls&quot;</span>) {
+        ls(students);
+    } <span style="color: #008800; font-weight: bold">else</span> <span style="color: #008800; font-weight: bold">if</span> (command <span style="color: #333333">==</span> <span style="background-color: #fff0f0">&quot;lc&quot;</span>) {
+        lc(courses);
+    } <span style="color: #008800; font-weight: bold">else</span> <span style="color: #008800; font-weight: bold">if</span> (command <span style="color: #333333">==</span> <span style="background-color: #fff0f0">&quot;taed&quot;</span>) {
+        taed(students, input_a);
+    } <span style="color: #008800; font-weight: bold">else</span> <span style="color: #008800; font-weight: bold">if</span> (command <span style="color: #333333">==</span> <span style="background-color: #fff0f0">&quot;roster&quot;</span>) {
+        roster(courses, input_a);
+    } <span style="color: #008800; font-weight: bold">else</span> <span style="color: #008800; font-weight: bold">if</span> (command <span style="color: #333333">==</span> <span style="background-color: #fff0f0">&quot;paths&quot;</span>) {
+        vector<span style="color: #333333">&lt;</span>Path<span style="color: #333333">&gt;</span> found_paths;
+        paths(students, input_a, input_b, found_paths);
+        <span style="color: #008800; font-weight: bold">for</span> (<span style="color: #333399; font-weight: bold">unsigned</span> <span style="color: #333399; font-weight: bold">long</span> i <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>; i <span style="color: #333333">&lt;</span> found_paths.size(); i<span style="color: #333333">++</span>) {
+            found_paths[i].print_path();
+        }
+    } <span style="color: #008800; font-weight: bold">else</span> <span style="color: #008800; font-weight: bold">if</span> (command <span style="color: #333333">==</span> <span style="background-color: #fff0f0">&quot;shortestpath&quot;</span>) {
+        vector<span style="color: #333333">&lt;</span>Path<span style="color: #333333">&gt;</span> found_paths;
+        paths(students, input_a, input_b, found_paths); <span style="color: #888888">//find all the paths</span>
+        shortestpath(found_paths); <span style="color: #888888">// find the shortest</span>
+    }
+
+    <span style="color: #008800; font-weight: bold">return</span> <span style="color: #007020">true</span>;
+}
+
+<span style="color: #888888">// purpose: reads in the data from the two files using an ifstream. If a student</span>
+<span style="color: #888888">// is not already in the list, add them. If adding_students is true, add</span>
+<span style="color: #888888">// new lines of data to the attended StudentList, but if its false, tht means</span>
+<span style="color: #888888">// we&#39;re reading from the second file which is TAs, so add them to the taed</span>
+<span style="color: #888888">// StudentList. Not only are we adding new people and courses, were also adding</span>
+<span style="color: #888888">// each person to the arrays in the courses that they attended or TA&#39;d, AND</span>
+<span style="color: #888888">// were adding each course to the arrays in people that took or TA&#39;d the class.</span>
+<span style="color: #888888">// So much adding!!!!!!!!!!!!!!!</span>
+<span style="color: #888888">// args: StudentList, string, CourseList, bool</span>
+<span style="color: #888888">// rets: none</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">process_file</span>(StudentList <span style="color: #333333">&amp;</span>students, string filename, CourseList <span style="color: #333333">&amp;</span>courses,
+                  <span style="color: #333399; font-weight: bold">bool</span> adding_students)
+{
+    string name, year, temp, comp_course;
+    ifstream file;
+
+
+    file.open(filename.c_str());
+    <span style="color: #008800; font-weight: bold">while</span> (getline(file, temp)) {
+        stringstream ss(temp);
+        getline(ss, name, <span style="color: #0044DD">&#39;:&#39;</span>);
+        getline(ss, comp_course, <span style="color: #0044DD">&#39;:&#39;</span>);
+        getline(ss, year, <span style="color: #0044DD">&#39;:&#39;</span>);
+        <span style="color: #888888">// cout &lt;&lt; name &lt;&lt; endl &lt;&lt; comp_course &lt;&lt; endl &lt;&lt; year &lt;&lt; endl;</span>
+        Person <span style="color: #333333">*</span>p <span style="color: #333333">=</span> students.find(name);
+        <span style="color: #008800; font-weight: bold">if</span> (p <span style="color: #333333">==</span> <span style="color: #007020">NULL</span>) {
+            p <span style="color: #333333">=</span> new Person(name);
+            students.add(p);
+        }
+        string course_ID <span style="color: #333333">=</span> comp_course <span style="color: #333333">+</span> year;
+        Course <span style="color: #333333">*</span>c <span style="color: #333333">=</span> courses.find(course_ID);
+        <span style="color: #008800; font-weight: bold">if</span> (c <span style="color: #333333">==</span> <span style="color: #007020">NULL</span>) {
+            c <span style="color: #333333">=</span> new Course(course_ID);
+            courses.add(c);
+        }
+        <span style="color: #008800; font-weight: bold">if</span> (adding_students) {
+            c<span style="color: #333333">-&gt;</span>roster.add(p);
+            p<span style="color: #333333">-&gt;</span>attended.add(c);
+        } <span style="color: #008800; font-weight: bold">else</span> {
+            c<span style="color: #333333">-&gt;</span>tas.add(p);
+            p<span style="color: #333333">-&gt;</span>taed.add(c);
+        }
+    }
+}
+
+
+<span style="color: #333399; font-weight: bold">int</span> <span style="color: #0066BB; font-weight: bold">main</span>(<span style="color: #333399; font-weight: bold">int</span> argc, <span style="color: #333399; font-weight: bold">char</span> <span style="color: #333333">*</span>argv[])
+{
+    StudentList master_list;
+    CourseList courses;
+    assert(argc <span style="color: #333333">==</span> <span style="color: #0000DD; font-weight: bold">3</span>); <span style="color: #888888">// two files must be read in</span>
+    string students <span style="color: #333333">=</span> argv[<span style="color: #0000DD; font-weight: bold">1</span>];
+    string tas <span style="color: #333333">=</span> argv[<span style="color: #0000DD; font-weight: bold">2</span>];
+    process_file(master_list, students, courses, <span style="color: #007020">true</span>); <span style="color: #888888">//reading in students</span>
+    process_file(master_list, tas, courses, <span style="color: #007020">false</span>); <span style="color: #888888">//reading in TAs</span>
+    <span style="color: #008800; font-weight: bold">while</span> (<span style="color: #007020">true</span>) { <span style="color: #888888">// takes the user command</span>
+        <span style="color: #008800; font-weight: bold">if</span> (<span style="color: #333333">!</span>readCommand(master_list, courses)) {
+            <span style="color: #008800; font-weight: bold">break</span>;
+        }
+    }
+
+    <span style="color: #888888">// destructors</span>
+    <span style="color: #008800; font-weight: bold">for</span> (<span style="color: #333399; font-weight: bold">int</span> i <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>; i <span style="color: #333333">&lt;</span> master_list.get_count(); i<span style="color: #333333">++</span>) {
+        delete master_list.students[i];
+    }
+    <span style="color: #008800; font-weight: bold">for</span> (<span style="color: #333399; font-weight: bold">int</span> i <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>; i <span style="color: #333333">&lt;</span> courses.get_count(); i<span style="color: #333333">++</span>) {
+        delete courses.courses[i];
+    }
+    <span style="color: #008800; font-weight: bold">return</span> <span style="color: #0000DD; font-weight: bold">0</span>;
+}
+</pre></td></tr></table></div>

@@ -1,0 +1,176 @@
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #333333">-</span> Degrees
+<span style="color: #333333">-</span> By Madeline Payne
+<span style="color: #333333">-</span> <span style="color: #0000DD; font-weight: bold">24</span><span style="color: #333333">-</span>April<span style="color: #333333">-</span><span style="color: #0000DD; font-weight: bold">2016</span>
+
+
+<span style="color: #557799">###Purpose</span>
+The program should be able to read in files of students and TAs and carry out
+several commands. Ls should list all courses taken by any students, ls should
+list all students, taed <span style="background-color: #fff0f0">&quot;student name&quot;</span> should list all courses that a student
+has taed, roster <span style="background-color: #fff0f0">&quot;course ID&quot;</span> should list all the students who have taken a 
+particular course, paths <span style="background-color: #fff0f0">&quot;student a&quot;</span> <span style="background-color: #fff0f0">&quot;student b&quot;</span> should list all the paths
+between the two students, shortest path <span style="background-color: #fff0f0">&quot;student a&quot;</span> <span style="background-color: #fff0f0">&quot;student b&quot;</span> should list the 
+shortest path between the two students.
+
+<span style="color: #557799">###List of files</span>
+<span style="color: #997700; font-weight: bold">Person:</span> Person is a class that is designed to hold all the relevant information
+<span style="color: #008800; font-weight: bold">for</span> one person. These things are their name, the classes they<span style="color: #FF0000; background-color: #FFAAAA">&#39;</span>ve taken, and the
+classes they<span style="color: #FF0000; background-color: #FFAAAA">&#39;</span>ve TA<span style="color: #FF0000; background-color: #FFAAAA">&#39;</span>d. Every person, regardless of whether they are in the TA 
+file or Student file have their own instance of a person class because many
+people both attended and ta<span style="color: #FF0000; background-color: #FFAAAA">&#39;</span>d classes. I have a global list of all people that 
+is created in main after I read in the two files.
+
+<span style="color: #997700; font-weight: bold">Course:</span> Course is a class that is designed to hold all the relevant information
+<span style="color: #008800; font-weight: bold">for</span> one course. These things are the course ID, the roster, and the list of TAs.
+I have a global list of all courses that is created in main after I read in 
+the two files.
+
+<span style="color: #997700; font-weight: bold">StudentList:</span> StudentList holds the master list of all people (students or TAs)
+and the relevant functions. Instances of this class are used to model the lists
+of students in each Course that make up the roster and TA list. This is because
+it makes it easier to have several lists rather than having individual dynamic
+arrays that each need their own counts and their own expand functions. 
+
+<span style="color: #997700; font-weight: bold">CourseList:</span> Courselist holds the master list of all courses and the relevant 
+functions. Instances of this class are used within each Person to model the list
+of all classes they<span style="color: #FF0000; background-color: #FFAAAA">&#39;</span>ve ever attended or TA<span style="color: #FF0000; background-color: #FFAAAA">&#39;</span>d. Used <span style="color: #008800; font-weight: bold">for</span> the same reasons as 
+described in StudentList.
+
+<span style="color: #997700; font-weight: bold">Path:</span> Path contains the PathElement <span style="color: #008800; font-weight: bold">struct</span> which has a Person pointer and 
+Course pointer. This is so that depending on what type it is in the path, either
+one or the other will be set to <span style="color: #007020">NULL</span>, which obviously indicates with a quick 
+check whether something the element is a Person or Course. This is very useful 
+when it comes to printing the path, because a Person is printed, followed by a
+<span style="background-color: #fff0f0">&quot;+-&quot;</span> and then a course followed by a <span style="background-color: #fff0f0">&quot;-&gt;&quot;</span> and so the function can easily 
+print the proper output by distinguishing whether that element is a Person or
+Course.
+
+<span style="color: #557799">###Compile command</span>
+use included Makefile or 
+main.cpp Course.cpp Person.cpp  StudentList.cpp CourseList.cpp Path.cpp 
+Course.h Person.h StudentList.h CourseList.h Path.h
+
+<span style="color: #557799">###Outline of data structure </span>
+Students<span style="color: #333333">/</span>TAs<span style="color: #333333">:</span> These are stored in dynamic arrays (either in StudentList or
+CourseList) so that they can be fairly easily accessed and easily printed.
+
+<span style="color: #997700; font-weight: bold">Courses:</span> These are stored in dynamic arrays too.
+
+<span style="color: #997700; font-weight: bold">Paths:</span> Individual paths are stored in a vector of type PathELement called Path 
+because the length of paths vary so much that its just very convenient to be 
+able to store in a vector. Vectors also have a built in size accessor function. 
+The list of all possible paths is also stored in a vector of type Path that 
+obviously expands as needed.
+
+<span style="color: #557799">###Algorithms</span>
+<span style="color: #997700; font-weight: bold">find_path:</span> This is made up of two different but similar find_path functions, one
+in the Person class and one in the Course class. Essentially you look at the 
+person you start with, go into the Courselist of courses taed, look at the first
+course in the taed list, go to that roster, and look at the first person in the 
+roster. Therefore, this is not a strictly recursive function as it does not
+call itself, just calls a very similar function. The program will go between
+the Person and Course version of the find_path, adding each Person or Class to
+the end of the path that it is building. Each time the other find_path is called
+a copy of the current path is passed in <span style="color: #333333">-</span> this is what takes up a lot of 
+memory and a lot of time, but I couldn<span style="color: #FF0000; background-color: #FFAAAA">&#39;</span>t find a way around this. One time<span style="color: #333333">-</span>saving
+method used was when looking at a roster, first searching <span style="color: #008800; font-weight: bold">for</span> the person in 
+mind, and <span style="color: #008800; font-weight: bold">if</span> finding it, calling find_path on that person <span style="color: #333333">-</span> thus ending that 
+path. However, <span style="color: #008800; font-weight: bold">if</span> the person was not immediately found in a roster, each Person
+and therefore each of their courses would be examined too. Once the desired 
+person is finally found, the path that has been built gets added to the vector
+of found_paths. I did not implement <span style="background-color: #fff0f0">&quot;marking&quot;</span> in the way we were expressly
+taught, but instead implemented a check of whether or not that person was 
+already in the path, and <span style="color: #008800; font-weight: bold">if</span> not, continuing down that path. 
+
+<span style="color: #557799">###Acknowledgements</span>
+My dad 
+Adam Plumer
+Halligan TAs
+</pre></td></tr></table></div>

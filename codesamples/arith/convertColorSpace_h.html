@@ -1,0 +1,44 @@
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #557799">#ifndef CONVERTCOLORSPACE_H</span>
+<span style="color: #557799">#define CONVERTCOLORSPACE_H</span>
+
+Pnm_ppm <span style="color: #0066BB; font-weight: bold">convertToFloat</span>(Pnm_ppm img, A2Methods_T methods);
+
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">applyConvertToFloat</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, A2Methods_UArray2 data, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>elem, 
+                               <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl);
+Pnm_ppm <span style="color: #0066BB; font-weight: bold">convertToInt</span>(Pnm_ppm img, A2Methods_T methods);
+
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">applyConvertToInt</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, A2Methods_UArray2 data, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>elem, 
+                               <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl);
+
+Pnm_ppm <span style="color: #0066BB; font-weight: bold">convertToCV</span>(Pnm_ppm img, A2Methods_T method);
+
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">applyConvertToCV</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, A2Methods_UArray2 data, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>elem, 
+                               <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl);
+
+Pnm_ppm <span style="color: #0066BB; font-weight: bold">convertToRGB</span>(Pnm_ppm img, A2Methods_T methods);
+
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">applyConvertToRGB</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, A2Methods_UArray2 data, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>elem, 
+                       <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl);
+<span style="color: #557799">#endif</span>
+</pre></td></tr></table></div>

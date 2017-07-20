@@ -1,33 +1,95 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300');
 body {
-        background: #FFF8DC;
-        font-family: Rockwell;
-        text-align: center;
+    background: white;
+    font-family: Lato, sans-serif;
+    text-align: center;
 }
 
 .main {
-        text-align: center;
-        top: 50px;
-        font-size: 27px;
+    padding-top: 20px;
 }
-.main img {
-        height: 360px;
-        width: auto;
-        top: 100px;
-        
+
+ul.navbar-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    letter-spacing: 2px;
+}
+
+.nav_buttons {
+    position: absolute;
+    bottom: 30px;
+}
+
+.text {
+    margin: auto;
+    margin-top: 5%;
+    width: 75%;
+    font-size: 16px;
+}
+
+.content-bottom {
+    float: center;
+    margin-top: 8%;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+}
+
+.content-left {
+    float: left;
+    margin-left: 12px;
+    margin-right: 50px;
+    width: 50%;
+}
+
+.content-left img {
+    float: right;
+}
+
+.content-left img {
+    height: 400px;
+    width: auto;
+    top: 100px;
+}
+
+.content-right {
+    overflow: hidden;
+    margin-left: 24px;
 }
 
 .link_box {
-        display: inline-block;
-        height: 10%;
-        width: 25%;
-        margin: 10px;
-        /*background-color: #99ccff;*/
-        font-size: 30px;
-        text-align: center;
-        /*margin: auto;
-        position: absolute;
-        top: 120px;
-        left: 0;
-        bottom: 0;
-        right: 0;*/
+    text-align: left;
+    float: left;
+    font-size: 20px;
 }
+
+.link_box:hover {
+    cursor: pointer;
+}
+
+.contact-info {
+    text-align: left;
+    float: left;
+    clear: left;
+}
+
+ul {
+    list-style-position: inside;
+    list-style-type: square;
+    text-align: left;
+    float: center;
+    font-size: 16px;
+}
+
+.resume-container {
+    margin: auto;
+    width: 65%;
+    text-align: center;
+}
+
+.subsection-content {
+    /*float:center;*/
+    width: 100%;
+}
+

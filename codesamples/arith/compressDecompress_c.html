@@ -1,0 +1,980 @@
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #888888">/*</span>
+<span style="color: #888888"> * File: compressDecompress</span>
+<span style="color: #888888"> * By: Madeline Payne</span>
+<span style="color: #888888"> * Date: 20/Oct/16</span>
+<span style="color: #888888"> *</span>
+<span style="color: #888888"> * Purpose: Take each 2x2 block of pixels and make it into one pixel stored in</span>
+<span style="color: #888888"> *  a new pixmap and uses discrete cosine transform to transform the luma</span>
+<span style="color: #888888"> *  values into cosine coefficients a,b,c,d, which it stores in the new pixmap</span>
+<span style="color: #888888"> *  if compressing, or takes each pixel and creates 4 pixels using the inverse</span>
+<span style="color: #888888"> *  DCT to get the Y values and putting the average values of Pb and Pr in</span>
+<span style="color: #888888"> *  each Chromacity struct.</span>
+<span style="color: #888888"> */</span>
+
+<span style="color: #557799">#include &lt;stdio.h&gt;</span>
+<span style="color: #557799">#include &lt;stdlib.h&gt;</span>
+<span style="color: #557799">#include &lt;math.h&gt;</span>
+<span style="color: #557799">#include &lt;assert.h&gt;</span>
+<span style="color: #557799">#include &lt;stdbool.h&gt;</span>
+
+
+<span style="color: #557799">#include &quot;pnm.h&quot;</span>
+<span style="color: #557799">#include &quot;a2methods.h&quot;</span>
+<span style="color: #557799">#include &quot;a2plain.h&quot;</span>
+<span style="color: #557799">#include &quot;uarray2.h&quot;</span>
+<span style="color: #557799">#include &quot;Chromacity.h&quot;</span>
+<span style="color: #557799">#include &quot;compressDecompress.h&quot;</span>
+<span style="color: #557799">#include &quot;convertColorSpace.h&quot;</span>
+<span style="color: #557799">#include &quot;UnpackedData.h&quot;</span>
+<span style="color: #557799">#include &quot;arith40.h&quot;</span>
+<span style="color: #557799">#include &quot;bitpack.h&quot;</span>
+
+<span style="color: #557799">#define A_LSB 23</span>
+<span style="color: #557799">#define A_WIDTH 9</span>
+<span style="color: #557799">#define B_LSB 18</span>
+<span style="color: #557799">#define B_WIDTH 5</span>
+<span style="color: #557799">#define C_LSB 13</span>
+<span style="color: #557799">#define C_WIDTH 5</span>
+<span style="color: #557799">#define D_LSB 8</span>
+<span style="color: #557799">#define D_WIDTH 5</span>
+<span style="color: #557799">#define PB_LSB 4</span>
+<span style="color: #557799">#define PB_WIDTH 4</span>
+<span style="color: #557799">#define PR_LSB 0</span>
+<span style="color: #557799">#define PR_WIDTH 4</span>
+
+<span style="color: #008800; font-weight: bold">typedef</span> <span style="color: #008800; font-weight: bold">struct</span> PackingCl {
+        UArray2_T pixelArray;
+        A2Methods_T methods;
+} PackingCl;
+
+Pnm_ppm <span style="color: #0066BB; font-weight: bold">setPixmap</span>(Pnm_ppm img, <span style="color: #333399; font-weight: bold">unsigned</span> width, <span style="color: #333399; font-weight: bold">unsigned</span> height, <span style="color: #333399; font-weight: bold">unsigned</span> denom,
+                  A2Methods_T methods);
+
+Pnm_ppm <span style="color: #0066BB; font-weight: bold">shrinkPixmap</span>(Pnm_ppm oldImg, A2Methods_T methods);
+
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">takeAverage</span>(Pnm_ppm oldImg, <span style="color: #333399; font-weight: bold">int</span> row, <span style="color: #333399; font-weight: bold">int</span> col, Pnm_ppm newImg, 
+                 A2Methods_T methods);
+
+Pnm_ppm <span style="color: #0066BB; font-weight: bold">growPixmap</span>(Pnm_ppm compressedImg, A2Methods_T methods);
+
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">distributeAverage</span>(Pnm_ppm oldImg, <span style="color: #333399; font-weight: bold">int</span> row, <span style="color: #333399; font-weight: bold">int</span> col, Pnm_ppm newImg, 
+                 A2Methods_T methods);
+
+Pnm_ppm <span style="color: #0066BB; font-weight: bold">packWords</span>(Pnm_ppm oldImg, A2Methods_T methods);
+
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">applyPackWords</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, A2Methods_UArray2 data, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>elem, 
+                               <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl);
+
+Pnm_ppm <span style="color: #0066BB; font-weight: bold">unpackWords</span>(Pnm_ppm oldImg, A2Methods_T methods);
+
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">applyUnpackWords</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, A2Methods_UArray2 data, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>elem, 
+                            <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl);
+
+Pnm_ppm <span style="color: #0066BB; font-weight: bold">readCompressedImage</span>(<span style="color: #333399; font-weight: bold">FILE</span> <span style="color: #333333">*</span>fp);
+
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">applyReadCompressedImage</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, A2Methods_UArray2 data, 
+                              <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>elem, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl);
+
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">printCompressedImage</span>(Pnm_ppm img, A2Methods_T methods);
+
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">printDecompressedImage</span>(Pnm_ppm img);
+
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">applyPrintCompressedImage</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, A2Methods_UArray2 data, 
+                              <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>elem, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl);
+
+<span style="color: #333399; font-weight: bold">float</span> <span style="color: #0066BB; font-weight: bold">checkRangeDCT</span>(<span style="color: #333399; font-weight: bold">float</span> num);
+
+<span style="color: #888888">/* Purpose: calls the various functions that compress the image.</span>
+<span style="color: #888888"> * Args: Pnm_ppm image to be compressed, A2Methods_T method suite</span>
+<span style="color: #888888"> * Rets: Compressed Pnm_ppm</span>
+<span style="color: #888888"> */</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">compressImage</span>(<span style="color: #333399; font-weight: bold">FILE</span> <span style="color: #333333">*</span>fp)
+{
+        A2Methods_T methods <span style="color: #333333">=</span> uarray2_methods_plain;
+        assert(methods);
+        Pnm_ppm img <span style="color: #333333">=</span> Pnm_ppmread(fp, methods);
+        
+        img <span style="color: #333333">=</span> convertToFloat(img, methods);
+        img <span style="color: #333333">=</span> convertToCV(img, methods);
+        img <span style="color: #333333">=</span> shrinkPixmap(img, methods);
+        img <span style="color: #333333">=</span> packWords(img, methods);
+        printCompressedImage(img, methods);
+}
+
+<span style="color: #888888">/* Purpose: calls the various functions that decompress the image.</span>
+<span style="color: #888888"> * Args: Pnm_ppm image to be decompressed, A2Methods_T method suite</span>
+<span style="color: #888888"> * Rets: Decompressed Pnm_ppm</span>
+<span style="color: #888888"> */</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">decompressImage</span>(<span style="color: #333399; font-weight: bold">FILE</span> <span style="color: #333333">*</span>fp)
+{
+        A2Methods_T methods <span style="color: #333333">=</span> uarray2_methods_plain;
+        assert(methods);
+        Pnm_ppm img <span style="color: #333333">=</span> readCompressedImage(fp);
+        assert(img<span style="color: #333333">-&gt;</span>width <span style="color: #333333">&gt;</span> <span style="color: #0000DD; font-weight: bold">0</span>);
+        assert(img<span style="color: #333333">-&gt;</span>height <span style="color: #333333">&gt;</span> <span style="color: #0000DD; font-weight: bold">0</span>);
+
+        
+        img <span style="color: #333333">=</span> unpackWords(img, methods);
+        img <span style="color: #333333">=</span> growPixmap(img, methods);
+        img <span style="color: #333333">=</span> convertToRGB(img, methods);
+        img <span style="color: #333333">=</span> convertToInt(img, methods);
+        printDecompressedImage(img);
+}
+
+
+<span style="color: #888888">/* Purpose: Calls the functions necessary to take the 2x2 blocks and average</span>
+<span style="color: #888888"> * them to one value, then put them into a new UArray2 of half the width</span>
+<span style="color: #888888"> * and height of the original.</span>
+<span style="color: #888888"> * Args: Pnm_ppm (original image)</span>
+<span style="color: #888888"> * Rets: Pnm_ppm (new, smaller image)</span>
+<span style="color: #888888"> */</span>
+Pnm_ppm <span style="color: #0066BB; font-weight: bold">shrinkPixmap</span>(Pnm_ppm oldImg, A2Methods_T methods)
+{
+        UnpackedData p;
+        Pnm_ppm newImg <span style="color: #333333">=</span> malloc(<span style="color: #008800; font-weight: bold">sizeof</span>(<span style="color: #333333">*</span>newImg));
+
+        <span style="color: #008800; font-weight: bold">if</span> (oldImg<span style="color: #333333">-&gt;</span>height <span style="color: #333333">%</span> <span style="color: #0000DD; font-weight: bold">2</span> <span style="color: #333333">!=</span> <span style="color: #0000DD; font-weight: bold">0</span>) {
+                oldImg<span style="color: #333333">-&gt;</span>height <span style="color: #333333">-=</span> <span style="color: #0000DD; font-weight: bold">1</span>;
+        }
+        <span style="color: #008800; font-weight: bold">if</span> (oldImg<span style="color: #333333">-&gt;</span>width <span style="color: #333333">%</span> <span style="color: #0000DD; font-weight: bold">2</span> <span style="color: #333333">!=</span> <span style="color: #0000DD; font-weight: bold">0</span>) {
+                oldImg<span style="color: #333333">-&gt;</span>width <span style="color: #333333">-=</span> <span style="color: #0000DD; font-weight: bold">1</span>;
+        }
+
+        newImg<span style="color: #333333">-&gt;</span>pixels <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>new(oldImg<span style="color: #333333">-&gt;</span>width <span style="color: #333333">/</span> <span style="color: #0000DD; font-weight: bold">2</span>, oldImg<span style="color: #333333">-&gt;</span>height <span style="color: #333333">/</span> <span style="color: #0000DD; font-weight: bold">2</span>,
+                                      <span style="color: #008800; font-weight: bold">sizeof</span>(<span style="color: #333333">*</span>p));
+        newImg <span style="color: #333333">=</span> setPixmap(newImg, oldImg<span style="color: #333333">-&gt;</span>width <span style="color: #333333">/</span> <span style="color: #0000DD; font-weight: bold">2</span>, oldImg<span style="color: #333333">-&gt;</span>height <span style="color: #333333">/</span> <span style="color: #0000DD; font-weight: bold">2</span>,
+                           <span style="color: #0000DD; font-weight: bold">255</span>, methods);
+
+        <span style="color: #008800; font-weight: bold">for</span> (<span style="color: #333399; font-weight: bold">int</span> row <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>; row <span style="color: #333333">&lt;</span> (<span style="color: #333399; font-weight: bold">int</span>)oldImg<span style="color: #333333">-&gt;</span>height; row <span style="color: #333333">+=</span> <span style="color: #0000DD; font-weight: bold">2</span>) {
+                <span style="color: #008800; font-weight: bold">for</span> (<span style="color: #333399; font-weight: bold">int</span> col <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>; col <span style="color: #333333">&lt;</span> (<span style="color: #333399; font-weight: bold">int</span>)oldImg<span style="color: #333333">-&gt;</span>width; col <span style="color: #333333">+=</span> <span style="color: #0000DD; font-weight: bold">2</span>) {
+                        takeAverage(oldImg, row, col, newImg, methods);
+                }
+        }
+        Pnm_ppmfree(<span style="color: #333333">&amp;</span>oldImg);
+        <span style="color: #008800; font-weight: bold">return</span> newImg;
+}
+
+<span style="color: #888888">/* Purpose: takes the four values Pb and Pr values in the 2x2 block and</span>
+<span style="color: #888888"> * averages them</span>
+<span style="color: #888888"> * Args: Pnm_ppm, int, int, Pnm_ppm</span>
+<span style="color: #888888"> * Rets: none</span>
+<span style="color: #888888"> */</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">takeAverage</span>(Pnm_ppm oldImg, <span style="color: #333399; font-weight: bold">int</span> row, <span style="color: #333399; font-weight: bold">int</span> col, Pnm_ppm newImg,
+                 A2Methods_T methods)
+{
+        UnpackedData newImgData;
+        newImgData <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>at(newImg<span style="color: #333333">-&gt;</span>pixels, col <span style="color: #333333">/</span> <span style="color: #0000DD; font-weight: bold">2</span>, row <span style="color: #333333">/</span> <span style="color: #0000DD; font-weight: bold">2</span>);
+
+        <span style="color: #888888">/* gets instance of struct at that location */</span>
+        Chromacity p1 <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>at(oldImg<span style="color: #333333">-&gt;</span>pixels, col, row);
+        Chromacity p2 <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>at(oldImg<span style="color: #333333">-&gt;</span>pixels, col <span style="color: #333333">+</span> <span style="color: #0000DD; font-weight: bold">1</span>, row);
+        Chromacity p3 <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>at(oldImg<span style="color: #333333">-&gt;</span>pixels, col, row <span style="color: #333333">+</span> <span style="color: #0000DD; font-weight: bold">1</span>);
+        Chromacity p4 <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>at(oldImg<span style="color: #333333">-&gt;</span>pixels, col <span style="color: #333333">+</span> <span style="color: #0000DD; font-weight: bold">1</span>, row <span style="color: #333333">+</span> <span style="color: #0000DD; font-weight: bold">1</span>);
+
+        <span style="color: #888888">/* taking Chromacity struct and putting into a,b,c,d,avPb,avPr</span>
+<span style="color: #888888">         * converting from floats to unsigned index</span>
+<span style="color: #888888">         * Takes the average */</span>
+        <span style="color: #333399; font-weight: bold">float</span> avPb <span style="color: #333333">=</span> (p1<span style="color: #333333">-&gt;</span>pb <span style="color: #333333">+</span> p2<span style="color: #333333">-&gt;</span>pb <span style="color: #333333">+</span> p3<span style="color: #333333">-&gt;</span>pb <span style="color: #333333">+</span> p4<span style="color: #333333">-&gt;</span>pb) <span style="color: #333333">/</span> <span style="color: #6600EE; font-weight: bold">4.0</span>;
+        <span style="color: #333399; font-weight: bold">float</span> avPr <span style="color: #333333">=</span> (p1<span style="color: #333333">-&gt;</span>pr <span style="color: #333333">+</span> p2<span style="color: #333333">-&gt;</span>pr <span style="color: #333333">+</span> p3<span style="color: #333333">-&gt;</span>pr <span style="color: #333333">+</span> p4<span style="color: #333333">-&gt;</span>pr) <span style="color: #333333">/</span> <span style="color: #6600EE; font-weight: bold">4.0</span>;
+
+        <span style="color: #888888">/* quantizes chroma */</span>
+        newImgData<span style="color: #333333">-&gt;</span>avPb <span style="color: #333333">=</span> Arith40_index_of_chroma(avPb);
+        newImgData<span style="color: #333333">-&gt;</span>avPr <span style="color: #333333">=</span> Arith40_index_of_chroma(avPr);
+
+        <span style="color: #888888">/* convert float to unsigned scaled */</span>
+        <span style="color: #333399; font-weight: bold">float</span> a <span style="color: #333333">=</span> (p4<span style="color: #333333">-&gt;</span>y <span style="color: #333333">+</span> p3<span style="color: #333333">-&gt;</span>y <span style="color: #333333">+</span> p2<span style="color: #333333">-&gt;</span>y <span style="color: #333333">+</span> p1<span style="color: #333333">-&gt;</span>y) <span style="color: #333333">/</span> <span style="color: #6600EE; font-weight: bold">4.0</span>;
+
+        <span style="color: #888888">/* keep a within range of 0 and 1 */</span>
+        <span style="color: #008800; font-weight: bold">if</span> (a <span style="color: #333333">&gt;</span> <span style="color: #0000DD; font-weight: bold">1</span>) {
+                a <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">1</span>;
+        } <span style="color: #008800; font-weight: bold">else</span> <span style="color: #008800; font-weight: bold">if</span> (a <span style="color: #333333">&lt;</span> <span style="color: #0000DD; font-weight: bold">0</span>) {
+                a <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>;
+        }
+        newImgData<span style="color: #333333">-&gt;</span>a <span style="color: #333333">=</span> round(a <span style="color: #333333">*</span> <span style="color: #6600EE; font-weight: bold">511.0</span>);
+
+        <span style="color: #888888">/* discrete cosine transformation */</span>
+        <span style="color: #333399; font-weight: bold">float</span> b <span style="color: #333333">=</span> (p4<span style="color: #333333">-&gt;</span>y <span style="color: #333333">+</span> p3<span style="color: #333333">-&gt;</span>y <span style="color: #333333">-</span> p2<span style="color: #333333">-&gt;</span>y <span style="color: #333333">-</span> p1<span style="color: #333333">-&gt;</span>y) <span style="color: #333333">/</span> <span style="color: #6600EE; font-weight: bold">4.0</span>;
+        <span style="color: #333399; font-weight: bold">float</span> c <span style="color: #333333">=</span> (p4<span style="color: #333333">-&gt;</span>y <span style="color: #333333">-</span> p3<span style="color: #333333">-&gt;</span>y <span style="color: #333333">+</span> p2<span style="color: #333333">-&gt;</span>y <span style="color: #333333">-</span> p1<span style="color: #333333">-&gt;</span>y) <span style="color: #333333">/</span> <span style="color: #6600EE; font-weight: bold">4.0</span>;
+        <span style="color: #333399; font-weight: bold">float</span> d <span style="color: #333333">=</span> (p4<span style="color: #333333">-&gt;</span>y <span style="color: #333333">-</span> p3<span style="color: #333333">-&gt;</span>y <span style="color: #333333">-</span> p2<span style="color: #333333">-&gt;</span>y <span style="color: #333333">+</span> p1<span style="color: #333333">-&gt;</span>y) <span style="color: #333333">/</span> <span style="color: #6600EE; font-weight: bold">4.0</span>;
+
+        <span style="color: #888888">/* convert float to signed scaled */</span>
+        <span style="color: #888888">/* keep values within the -0.3 to 0.3 range */</span>
+        b <span style="color: #333333">=</span> checkRangeDCT(b);
+        c <span style="color: #333333">=</span> checkRangeDCT(c);
+        d <span style="color: #333333">=</span> checkRangeDCT(d);
+        
+        <span style="color: #888888">/* newImgData b, c, d, are signed ints */</span>
+        newImgData<span style="color: #333333">-&gt;</span>b <span style="color: #333333">=</span> round(b <span style="color: #333333">*</span> <span style="color: #6600EE; font-weight: bold">50.0</span>);
+        newImgData<span style="color: #333333">-&gt;</span>c <span style="color: #333333">=</span> round(c <span style="color: #333333">*</span> <span style="color: #6600EE; font-weight: bold">50.0</span>);
+        newImgData<span style="color: #333333">-&gt;</span>d <span style="color: #333333">=</span> round(d <span style="color: #333333">*</span> <span style="color: #6600EE; font-weight: bold">50.0</span>);
+
+}
+
+<span style="color: #888888">/* Purpose: checks whether b, c, and d are in the range -0.3 to 0.3 and </span>
+<span style="color: #888888"> * rounds if necessary</span>
+<span style="color: #888888"> * Args: float</span>
+<span style="color: #888888"> * Rets: float</span>
+<span style="color: #888888"> */</span> 
+<span style="color: #333399; font-weight: bold">float</span> <span style="color: #0066BB; font-weight: bold">checkRangeDCT</span>(<span style="color: #333399; font-weight: bold">float</span> num)
+{
+        <span style="color: #008800; font-weight: bold">if</span> (num <span style="color: #333333">&lt;</span> <span style="color: #333333">-</span><span style="color: #6600EE; font-weight: bold">0.3</span>) {
+                num <span style="color: #333333">=</span> <span style="color: #333333">-</span><span style="color: #6600EE; font-weight: bold">0.3</span>;
+        } <span style="color: #008800; font-weight: bold">else</span> <span style="color: #008800; font-weight: bold">if</span> (num <span style="color: #333333">&gt;</span> <span style="color: #6600EE; font-weight: bold">0.3</span>) {
+                num <span style="color: #333333">=</span> <span style="color: #6600EE; font-weight: bold">0.3</span>;
+        } 
+        <span style="color: #008800; font-weight: bold">return</span> num;
+}
+
+<span style="color: #888888">/* Purpose: Calls the functions necessary to take the 2x2 blocks and average</span>
+<span style="color: #888888"> * them to one value, then put them into a new UArray2 of half the width</span>
+<span style="color: #888888"> * and height of the original.</span>
+<span style="color: #888888"> * Args: Pnm_ppm (original image)</span>
+<span style="color: #888888"> * Rets: Pnm_ppm (new, smaller image)</span>
+<span style="color: #888888"> */</span>
+Pnm_ppm <span style="color: #0066BB; font-weight: bold">growPixmap</span>(Pnm_ppm compressedImg, A2Methods_T methods)
+{
+        Chromacity p;
+        Pnm_ppm newImg <span style="color: #333333">=</span> malloc(<span style="color: #008800; font-weight: bold">sizeof</span>(<span style="color: #333333">*</span>newImg));
+        newImg<span style="color: #333333">-&gt;</span>pixels <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>new(compressedImg<span style="color: #333333">-&gt;</span>width <span style="color: #333333">*</span> <span style="color: #0000DD; font-weight: bold">2</span>, 
+                                      compressedImg<span style="color: #333333">-&gt;</span>height <span style="color: #333333">*</span> <span style="color: #0000DD; font-weight: bold">2</span>, <span style="color: #008800; font-weight: bold">sizeof</span>(<span style="color: #333333">*</span>p));
+        newImg <span style="color: #333333">=</span> setPixmap(newImg, compressedImg<span style="color: #333333">-&gt;</span>width <span style="color: #333333">*</span> <span style="color: #0000DD; font-weight: bold">2</span>, compressedImg<span style="color: #333333">-&gt;</span>height <span style="color: #333333">*</span> <span style="color: #0000DD; font-weight: bold">2</span>, <span style="color: #0000DD; font-weight: bold">255</span>, methods);
+
+        <span style="color: #008800; font-weight: bold">for</span> (<span style="color: #333399; font-weight: bold">int</span> row <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>; row <span style="color: #333333">&lt;</span> (<span style="color: #333399; font-weight: bold">int</span>)compressedImg<span style="color: #333333">-&gt;</span>height; row<span style="color: #333333">++</span>) {
+                <span style="color: #008800; font-weight: bold">for</span> (<span style="color: #333399; font-weight: bold">int</span> col <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>; col <span style="color: #333333">&lt;</span> (<span style="color: #333399; font-weight: bold">int</span>)compressedImg<span style="color: #333333">-&gt;</span>width; col<span style="color: #333333">++</span>) {
+                        distributeAverage(compressedImg, row, col, newImg, methods);
+                }
+        }
+        Pnm_ppmfree(<span style="color: #333333">&amp;</span>compressedImg);
+        <span style="color: #008800; font-weight: bold">return</span> newImg;
+}
+
+<span style="color: #888888">/* Purpose: takes the four values Pb and Pr values in the 2x2 block and</span>
+<span style="color: #888888"> * averages them</span>
+<span style="color: #888888"> * Args: Pnm_ppm, int, int, Pnm_ppm</span>
+<span style="color: #888888"> * Rets: none</span>
+<span style="color: #888888"> */</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">distributeAverage</span>(Pnm_ppm oldImg, <span style="color: #333399; font-weight: bold">int</span> row, <span style="color: #333399; font-weight: bold">int</span> col, Pnm_ppm newImg,
+                       A2Methods_T methods)
+{
+        UnpackedData oldPixel <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>at(oldImg<span style="color: #333333">-&gt;</span>pixels, col, row);
+        row <span style="color: #333333">=</span> row <span style="color: #333333">*</span> <span style="color: #0000DD; font-weight: bold">2</span>;
+        col <span style="color: #333333">=</span> col <span style="color: #333333">*</span> <span style="color: #0000DD; font-weight: bold">2</span>;
+        Chromacity p1 <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>at(newImg<span style="color: #333333">-&gt;</span>pixels, col, row);
+        Chromacity p2 <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>at(newImg<span style="color: #333333">-&gt;</span>pixels, col <span style="color: #333333">+</span> <span style="color: #0000DD; font-weight: bold">1</span>, row);
+        Chromacity p3 <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>at(newImg<span style="color: #333333">-&gt;</span>pixels, col, row <span style="color: #333333">+</span> <span style="color: #0000DD; font-weight: bold">1</span>);
+        Chromacity p4 <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>at(newImg<span style="color: #333333">-&gt;</span>pixels, col <span style="color: #333333">+</span> <span style="color: #0000DD; font-weight: bold">1</span>, row <span style="color: #333333">+</span> <span style="color: #0000DD; font-weight: bold">1</span>);
+        <span style="color: #333399; font-weight: bold">float</span> a <span style="color: #333333">=</span> oldPixel<span style="color: #333333">-&gt;</span>a <span style="color: #333333">/</span> <span style="color: #6600EE; font-weight: bold">511.0</span>;
+
+        <span style="color: #888888">/* scaling back to the -0.3 to 0.3 range */</span>
+        <span style="color: #333399; font-weight: bold">float</span> b <span style="color: #333333">=</span> oldPixel<span style="color: #333333">-&gt;</span>b <span style="color: #333333">/</span> <span style="color: #6600EE; font-weight: bold">50.0</span>;
+        <span style="color: #333399; font-weight: bold">float</span> c <span style="color: #333333">=</span> oldPixel<span style="color: #333333">-&gt;</span>c <span style="color: #333333">/</span> <span style="color: #6600EE; font-weight: bold">50.0</span>;
+        <span style="color: #333399; font-weight: bold">float</span> d <span style="color: #333333">=</span> oldPixel<span style="color: #333333">-&gt;</span>d <span style="color: #333333">/</span> <span style="color: #6600EE; font-weight: bold">50.0</span>;
+
+        <span style="color: #888888">/* using index to find chroma */</span>
+        <span style="color: #333399; font-weight: bold">float</span> pb <span style="color: #333333">=</span> Arith40_chroma_of_index(oldPixel<span style="color: #333333">-&gt;</span>avPb);
+        <span style="color: #333399; font-weight: bold">float</span> pr <span style="color: #333333">=</span> Arith40_chroma_of_index(oldPixel<span style="color: #333333">-&gt;</span>avPr);
+
+        <span style="color: #888888">/* inverse discrete cosine transform and distributes average */</span>
+        p1<span style="color: #333333">-&gt;</span>pb <span style="color: #333333">=</span> pb;
+        p1<span style="color: #333333">-&gt;</span>pr <span style="color: #333333">=</span> pr;
+        p1<span style="color: #333333">-&gt;</span>y <span style="color: #333333">=</span> a <span style="color: #333333">-</span> b <span style="color: #333333">-</span> c <span style="color: #333333">+</span> d;
+
+        p2<span style="color: #333333">-&gt;</span>pb <span style="color: #333333">=</span> pb;
+        p2<span style="color: #333333">-&gt;</span>pr <span style="color: #333333">=</span> pr;
+        p2<span style="color: #333333">-&gt;</span>y <span style="color: #333333">=</span> a <span style="color: #333333">-</span> b <span style="color: #333333">+</span> c <span style="color: #333333">-</span> d;
+
+        p3<span style="color: #333333">-&gt;</span>pb <span style="color: #333333">=</span> pb;
+        p3<span style="color: #333333">-&gt;</span>pr <span style="color: #333333">=</span> pr;
+        p3<span style="color: #333333">-&gt;</span>y <span style="color: #333333">=</span> a <span style="color: #333333">+</span> b <span style="color: #333333">-</span> c <span style="color: #333333">-</span> d;
+
+        p4<span style="color: #333333">-&gt;</span>pb <span style="color: #333333">=</span> pb;
+        p4<span style="color: #333333">-&gt;</span>pr <span style="color: #333333">=</span> pr;
+        p4<span style="color: #333333">-&gt;</span>y <span style="color: #333333">=</span> a <span style="color: #333333">+</span> b <span style="color: #333333">+</span> c <span style="color: #333333">+</span> d;
+}
+
+
+<span style="color: #888888">/*************************************************************************</span>
+<span style="color: #888888"> * </span>
+<span style="color: #888888"> *                 PACKING AND UNPACKING WORDS</span>
+<span style="color: #888888"> *                 ************************************************************************/</span>
+ 
+ 
+<span style="color: #888888">/* Purpose: Packs a, b, c, d, avPb, avPr into the word</span>
+<span style="color: #888888"> * Args: Pnm_ppm image with values to be packed, A2Methods_T method suite</span>
+<span style="color: #888888"> * Rets: Pnm_ppm with packed words</span>
+<span style="color: #888888"> */</span>
+Pnm_ppm <span style="color: #0066BB; font-weight: bold">packWords</span>(Pnm_ppm oldImg, A2Methods_T methods)
+{
+        <span style="color: #333399; font-weight: bold">uint64_t</span> p;
+        Pnm_ppm newImg <span style="color: #333333">=</span> malloc(<span style="color: #008800; font-weight: bold">sizeof</span>(<span style="color: #333333">*</span>newImg));
+        newImg<span style="color: #333333">-&gt;</span>pixels <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>new(oldImg<span style="color: #333333">-&gt;</span>width, oldImg<span style="color: #333333">-&gt;</span>height,
+                                      <span style="color: #008800; font-weight: bold">sizeof</span>(p));
+        newImg <span style="color: #333333">=</span> setPixmap(newImg, oldImg<span style="color: #333333">-&gt;</span>width, oldImg<span style="color: #333333">-&gt;</span>height,
+                           <span style="color: #0000DD; font-weight: bold">255</span>, methods);
+        PackingCl cl <span style="color: #333333">=</span> {oldImg<span style="color: #333333">-&gt;</span>pixels, methods};
+        methods<span style="color: #333333">-&gt;</span>map_default(newImg<span style="color: #333333">-&gt;</span>pixels, applyPackWords, <span style="color: #333333">&amp;</span>cl);
+        Pnm_ppmfree(<span style="color: #333333">&amp;</span>oldImg);
+        <span style="color: #008800; font-weight: bold">return</span> newImg;
+}
+
+<span style="color: #888888">/* Purpose: apply function to pack a, b, c, d, avPb, avPr into the word</span>
+<span style="color: #888888"> * Args: int, int, A2Methods_UArray2, void*, void*</span>
+<span style="color: #888888"> * Rets: none</span>
+<span style="color: #888888"> */</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">applyPackWords</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, A2Methods_UArray2 data, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>elem, 
+                               <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl)
+{
+        (<span style="color: #333399; font-weight: bold">void</span>)elem;
+        (<span style="color: #333399; font-weight: bold">void</span>)data;
+        <span style="color: #333399; font-weight: bold">uint64_t</span> word <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>;
+        PackingCl <span style="color: #333333">*</span>clData <span style="color: #333333">=</span> cl;
+        A2Methods_T methods <span style="color: #333333">=</span> clData<span style="color: #333333">-&gt;</span>methods;
+        <span style="color: #888888">/* gets the current pixel from the unpacked image */</span>
+        UnpackedData currPixel <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>at(clData<span style="color: #333333">-&gt;</span>pixelArray, col, row);
+        <span style="color: #333399; font-weight: bold">uint64_t</span> <span style="color: #333333">*</span>newLocation <span style="color: #333333">=</span> elem;
+        
+        word <span style="color: #333333">=</span> Bitpack_newu(word, A_WIDTH, A_LSB, currPixel<span style="color: #333333">-&gt;</span>a);
+        word <span style="color: #333333">=</span> Bitpack_news(word, B_WIDTH, B_LSB, currPixel<span style="color: #333333">-&gt;</span>b);
+        word <span style="color: #333333">=</span> Bitpack_news(word, C_WIDTH, C_LSB, currPixel<span style="color: #333333">-&gt;</span>c);
+        word <span style="color: #333333">=</span> Bitpack_news(word, D_WIDTH, D_LSB, currPixel<span style="color: #333333">-&gt;</span>d);
+        word <span style="color: #333333">=</span> Bitpack_newu(word, PB_WIDTH, PB_LSB, currPixel<span style="color: #333333">-&gt;</span>avPb);
+        word <span style="color: #333333">=</span> Bitpack_newu(word, PR_WIDTH, PR_LSB, currPixel<span style="color: #333333">-&gt;</span>avPr);
+        <span style="color: #333333">*</span>newLocation <span style="color: #333333">=</span> word;       
+}
+
+<span style="color: #888888">/* Purpose: Unpack a, b, c, d, avPb, avPr into local variables in </span>
+<span style="color: #888888"> * UnpackedData struct</span>
+<span style="color: #888888"> * Args: Pnm_ppm image with values to be unpacked, A2Methods_T method suite</span>
+<span style="color: #888888"> * Rets: Pnm_ppm with UnpackedData structs</span>
+<span style="color: #888888"> */</span>
+Pnm_ppm <span style="color: #0066BB; font-weight: bold">unpackWords</span>(Pnm_ppm compressedImg, A2Methods_T methods)
+{
+        UnpackedData p;
+        Pnm_ppm newImg <span style="color: #333333">=</span> malloc(<span style="color: #008800; font-weight: bold">sizeof</span>(<span style="color: #333333">*</span>newImg));
+        newImg<span style="color: #333333">-&gt;</span>pixels <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>new(compressedImg<span style="color: #333333">-&gt;</span>width, 
+                                      compressedImg<span style="color: #333333">-&gt;</span>height, <span style="color: #008800; font-weight: bold">sizeof</span>(<span style="color: #333333">*</span>p));
+        newImg <span style="color: #333333">=</span> setPixmap(newImg, compressedImg<span style="color: #333333">-&gt;</span>width, 
+                           compressedImg<span style="color: #333333">-&gt;</span>height, <span style="color: #0000DD; font-weight: bold">255</span>, methods);
+        PackingCl cl <span style="color: #333333">=</span> {compressedImg<span style="color: #333333">-&gt;</span>pixels, methods};
+        methods<span style="color: #333333">-&gt;</span>map_default(newImg<span style="color: #333333">-&gt;</span>pixels, applyUnpackWords, <span style="color: #333333">&amp;</span>cl);
+        Pnm_ppmfree(<span style="color: #333333">&amp;</span>compressedImg);
+        <span style="color: #008800; font-weight: bold">return</span> newImg;
+}
+
+<span style="color: #888888">/* Purpose: apply function to unpack a, b, c, d, avPb, avPr from the word</span>
+<span style="color: #888888"> * and put into an UnpackedData struct</span>
+<span style="color: #888888"> * Args: int, int, A2Methods_UArray2, void*, void*</span>
+<span style="color: #888888"> * Rets: none</span>
+<span style="color: #888888"> */</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">applyUnpackWords</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, A2Methods_UArray2 data, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>elem, 
+                               <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl)
+{
+        (<span style="color: #333399; font-weight: bold">void</span>)data;
+        PackingCl <span style="color: #333333">*</span>clData <span style="color: #333333">=</span> cl;
+        A2Methods_T methods <span style="color: #333333">=</span> clData<span style="color: #333333">-&gt;</span>methods;
+        <span style="color: #333399; font-weight: bold">uint64_t</span> <span style="color: #333333">*</span>currWord <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>at(clData<span style="color: #333333">-&gt;</span>pixelArray, col, row);
+        UnpackedData newLocation <span style="color: #333333">=</span> elem;
+        
+        newLocation<span style="color: #333333">-&gt;</span>a <span style="color: #333333">=</span> Bitpack_getu(<span style="color: #333333">*</span>currWord, A_WIDTH, A_LSB);
+        newLocation<span style="color: #333333">-&gt;</span>b <span style="color: #333333">=</span> Bitpack_gets(<span style="color: #333333">*</span>currWord, B_WIDTH, B_LSB);
+        newLocation<span style="color: #333333">-&gt;</span>c <span style="color: #333333">=</span> Bitpack_gets(<span style="color: #333333">*</span>currWord, C_WIDTH, C_LSB);
+        newLocation<span style="color: #333333">-&gt;</span>d <span style="color: #333333">=</span> Bitpack_gets(<span style="color: #333333">*</span>currWord, D_WIDTH, D_LSB);
+        newLocation<span style="color: #333333">-&gt;</span>avPb <span style="color: #333333">=</span> Bitpack_getu(<span style="color: #333333">*</span>currWord, PB_WIDTH, PB_LSB);
+        newLocation<span style="color: #333333">-&gt;</span>avPr <span style="color: #333333">=</span> Bitpack_getu(<span style="color: #333333">*</span>currWord, PR_WIDTH, PR_LSB);
+}
+
+
+
+<span style="color: #888888">/************************************************************************</span>
+<span style="color: #888888"> *</span>
+<span style="color: #888888"> *              FUNCTIONS TO HANDLE OUTPUT AND READING</span>
+<span style="color: #888888"> *              FROM NON PNM_PPM FORMAT FILES </span>
+<span style="color: #888888"> *</span>
+<span style="color: #888888"> ************************************************************************/</span>
+
+<span style="color: #888888">/* Purpose: Reads in the compressed image (in txt format most likely) and</span>
+<span style="color: #888888"> * creates a new pixmap of the decompressed size. Then converts all of the</span>
+<span style="color: #888888"> * information in the txt file into codewords</span>
+<span style="color: #888888"> * Args: File pointer</span>
+<span style="color: #888888"> * Rets: Pnm_ppm filled with codewords</span>
+<span style="color: #888888"> */</span>
+Pnm_ppm <span style="color: #0066BB; font-weight: bold">readCompressedImage</span>(<span style="color: #333399; font-weight: bold">FILE</span> <span style="color: #333333">*</span>fp)
+{
+        A2Methods_T methods <span style="color: #333333">=</span> uarray2_methods_plain;
+        <span style="color: #333399; font-weight: bold">unsigned</span> height, width;
+        <span style="color: #333399; font-weight: bold">int</span> read <span style="color: #333333">=</span> fscanf(fp, <span style="background-color: #fff0f0">&quot;COMP40 Compressed image format 2</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0">\n</span><span style="background-color: #fff0f0">%u %u</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0">\n</span><span style="background-color: #fff0f0">&quot;</span>,
+                          <span style="color: #333333">&amp;</span>width, <span style="color: #333333">&amp;</span>height);
+        assert(read <span style="color: #333333">==</span> <span style="color: #0000DD; font-weight: bold">2</span>);
+        Pnm_ppm img <span style="color: #333333">=</span> malloc(<span style="color: #008800; font-weight: bold">sizeof</span>(<span style="color: #333333">*</span>img));
+        UnpackedData p;
+        img <span style="color: #333333">=</span> setPixmap(img, width <span style="color: #333333">/</span> <span style="color: #0000DD; font-weight: bold">2</span>, height <span style="color: #333333">/</span> <span style="color: #0000DD; font-weight: bold">2</span>, <span style="color: #0000DD; font-weight: bold">255</span>, methods);
+        img<span style="color: #333333">-&gt;</span>pixels <span style="color: #333333">=</span> methods<span style="color: #333333">-&gt;</span>new(width <span style="color: #333333">/</span> <span style="color: #0000DD; font-weight: bold">2</span>, height <span style="color: #333333">/</span> <span style="color: #0000DD; font-weight: bold">2</span>, <span style="color: #008800; font-weight: bold">sizeof</span>(<span style="color: #333333">*</span>p));
+        
+        methods<span style="color: #333333">-&gt;</span>map_default(img<span style="color: #333333">-&gt;</span>pixels, applyReadCompressedImage, fp);        
+        <span style="color: #008800; font-weight: bold">return</span> img;
+}
+
+<span style="color: #888888">/* Purpose: Apply function for converting chars into codewords. We chose </span>
+<span style="color: #888888"> * not to use Bitpack_newu here because using a simple mask was less expensive</span>
+<span style="color: #888888"> * Args: int, int, A2Methods_UArray2, void*, void*</span>
+<span style="color: #888888"> * Rets: none</span>
+<span style="color: #888888"> */</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">applyReadCompressedImage</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, A2Methods_UArray2 data, 
+                              <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>elem, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl)
+{     
+        (<span style="color: #333399; font-weight: bold">void</span>)col;
+        (<span style="color: #333399; font-weight: bold">void</span>)row;
+        (<span style="color: #333399; font-weight: bold">void</span>)data;
+        
+        <span style="color: #333399; font-weight: bold">int</span> c;
+        <span style="color: #333399; font-weight: bold">int</span> lsb <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">32</span>;
+        <span style="color: #333399; font-weight: bold">uint64_t</span> word <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>;
+        <span style="color: #333399; font-weight: bold">uint64_t</span> <span style="color: #333333">*</span>currPixel <span style="color: #333333">=</span> elem;
+        <span style="color: #008800; font-weight: bold">for</span> (<span style="color: #333399; font-weight: bold">int</span> i <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>; i <span style="color: #333333">&lt;</span> <span style="color: #0000DD; font-weight: bold">4</span>; i<span style="color: #333333">++</span>) {
+                assert(c <span style="color: #333333">!=</span> EOF);
+                c <span style="color: #333333">=</span> getc((<span style="color: #333399; font-weight: bold">FILE</span><span style="color: #333333">*</span>)cl);
+                lsb <span style="color: #333333">-=</span> <span style="color: #0000DD; font-weight: bold">8</span>;
+                <span style="color: #888888">/* this masks off the rest of the word */</span>
+                word <span style="color: #333333">=</span> word <span style="color: #333333">|</span> (c <span style="color: #333333">&lt;&lt;</span> lsb);
+        }
+        <span style="color: #333333">*</span>currPixel <span style="color: #333333">=</span> word;
+}
+
+<span style="color: #888888">/* Purpose: prints the header, then maps through the image and prints </span>
+<span style="color: #888888"> * the sets of 8 bits</span>
+<span style="color: #888888"> * Args: img, methods</span>
+<span style="color: #888888"> * Rets: none</span>
+<span style="color: #888888"> */</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">printCompressedImage</span>(Pnm_ppm img, A2Methods_T methods)
+{
+        <span style="color: #888888">/* multiply width/height by two to get size of ORIGINAL image */</span>
+        fprintf(stdout, <span style="background-color: #fff0f0">&quot;COMP40 Compressed image format 2</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0">\n</span><span style="background-color: #fff0f0">%u %u</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0">\n</span><span style="background-color: #fff0f0">&quot;</span>,
+                          img<span style="color: #333333">-&gt;</span>width <span style="color: #333333">*</span> <span style="color: #0000DD; font-weight: bold">2</span>, img<span style="color: #333333">-&gt;</span>height <span style="color: #333333">*</span> <span style="color: #0000DD; font-weight: bold">2</span>);
+        methods<span style="color: #333333">-&gt;</span>map_default(img<span style="color: #333333">-&gt;</span>pixels, applyPrintCompressedImage, <span style="color: #007020">NULL</span>);    
+        
+}
+
+<span style="color: #888888">/* Purpose: writes the decompressed image to standard out</span>
+<span style="color: #888888"> * Args: img</span>
+<span style="color: #888888"> * Rets: none</span>
+<span style="color: #888888"> */</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">printDecompressedImage</span>(Pnm_ppm img)
+{
+        Pnm_ppmwrite(stdout, img);
+        
+}
+
+<span style="color: #888888">/* Purpose: apply function that maps through the array of codewords</span>
+<span style="color: #888888"> * and prints them off. We chose not to use Bitpack_getu here because</span>
+<span style="color: #888888"> * using a simple mask was less expensive</span>
+<span style="color: #888888"> * Args: int, int, A2Methods_UArray2, void*, void*</span>
+<span style="color: #888888"> * Rets: none</span>
+<span style="color: #888888"> */</span>
+<span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">applyPrintCompressedImage</span>(<span style="color: #333399; font-weight: bold">int</span> col, <span style="color: #333399; font-weight: bold">int</span> row, A2Methods_UArray2 data, 
+                              <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>elem, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl)
+{     
+        (<span style="color: #333399; font-weight: bold">void</span>)col;
+        (<span style="color: #333399; font-weight: bold">void</span>)row;
+        (<span style="color: #333399; font-weight: bold">void</span>)data;
+        (<span style="color: #333399; font-weight: bold">void</span>)cl;
+        <span style="color: #333399; font-weight: bold">uint64_t</span> word <span style="color: #333333">=</span> <span style="color: #333333">*</span>((<span style="color: #333399; font-weight: bold">uint64_t</span><span style="color: #333333">*</span>)elem);
+        <span style="color: #333399; font-weight: bold">int</span> lsb <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">32</span>;
+        <span style="color: #008800; font-weight: bold">for</span> (<span style="color: #333399; font-weight: bold">int</span> i <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>; i <span style="color: #333333">&lt;</span> <span style="color: #0000DD; font-weight: bold">4</span>; i<span style="color: #333333">++</span>) {
+                lsb <span style="color: #333333">-=</span> <span style="color: #0000DD; font-weight: bold">8</span>;
+                <span style="color: #888888">/* this masks off all the bits except for the 8 bits</span>
+<span style="color: #888888">                that we want to give to c */</span>
+                <span style="color: #333399; font-weight: bold">int</span> c <span style="color: #333333">=</span> (word <span style="color: #333333">&gt;&gt;</span> lsb) <span style="color: #333333">&amp;</span> <span style="color: #005588; font-weight: bold">0xFF</span>;
+                putchar(c);
+        }
+       
+}
+</pre></td></tr></table></div>

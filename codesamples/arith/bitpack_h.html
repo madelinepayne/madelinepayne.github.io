@@ -1,0 +1,38 @@
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #557799">#ifndef BITPACK_H</span>
+<span style="color: #557799">#define BITPACK_H</span>
+
+<span style="color: #333399; font-weight: bold">bool</span> <span style="color: #0066BB; font-weight: bold">Bitpack_fitsu</span>(<span style="color: #333399; font-weight: bold">uint64_t</span> n, <span style="color: #333399; font-weight: bold">unsigned</span> width);
+
+<span style="color: #333399; font-weight: bold">bool</span> <span style="color: #0066BB; font-weight: bold">Bitpack_fitss</span>(<span style="color: #333399; font-weight: bold">int64_t</span> n, <span style="color: #333399; font-weight: bold">unsigned</span> width);
+
+<span style="color: #333399; font-weight: bold">uint64_t</span> <span style="color: #0066BB; font-weight: bold">Bitpack_getu</span>(<span style="color: #333399; font-weight: bold">uint64_t</span> word, <span style="color: #333399; font-weight: bold">unsigned</span> with, <span style="color: #333399; font-weight: bold">unsigned</span> lsb);
+
+<span style="color: #333399; font-weight: bold">int64_t</span> <span style="color: #0066BB; font-weight: bold">Bitpack_gets</span>(<span style="color: #333399; font-weight: bold">uint64_t</span> word, <span style="color: #333399; font-weight: bold">unsigned</span> with, <span style="color: #333399; font-weight: bold">unsigned</span> lsb);
+
+<span style="color: #333399; font-weight: bold">uint64_t</span> <span style="color: #0066BB; font-weight: bold">Bitpack_newu</span>(<span style="color: #333399; font-weight: bold">uint64_t</span> word, <span style="color: #333399; font-weight: bold">unsigned</span> width, <span style="color: #333399; font-weight: bold">unsigned</span> lsb,
+                      <span style="color: #333399; font-weight: bold">uint64_t</span> value);
+
+<span style="color: #333399; font-weight: bold">uint64_t</span> <span style="color: #0066BB; font-weight: bold">Bitpack_news</span>(<span style="color: #333399; font-weight: bold">uint64_t</span> word, <span style="color: #333399; font-weight: bold">unsigned</span> width, <span style="color: #333399; font-weight: bold">unsigned</span> lsb, 
+                      <span style="color: #333399; font-weight: bold">int64_t</span> value);
+                      
+
+<span style="color: #557799">#endif</span>
+</pre></td></tr></table></div>

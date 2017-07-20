@@ -1,0 +1,48 @@
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #888888">//Course.h</span>
+<span style="color: #888888">//</span>
+<span style="color: #557799">#ifndef __course_h__</span>
+<span style="color: #557799">#define __course_h__</span>
+
+<span style="color: #557799">#include &quot;StudentList.h&quot;</span>
+<span style="color: #557799">#include &quot;Path.h&quot;</span>
+
+class Course {
+<span style="color: #997700; font-weight: bold">public:</span>
+    Course(std<span style="color: #333333">::</span>string ID);
+    <span style="color: #333333">~</span>Course();
+    std<span style="color: #333333">::</span>string <span style="color: #333333">&amp;</span>get_ID();
+    StudentList roster;
+    StudentList tas;
+    <span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">find_path</span>(Person <span style="color: #333333">*</span>b, Path, std<span style="color: #333333">::</span>vector<span style="color: #333333">&lt;</span>Path<span style="color: #333333">&gt;&amp;</span>);
+    
+<span style="color: #997700; font-weight: bold">private:</span>
+    std<span style="color: #333333">::</span>string ID;  <span style="color: #888888">//format: course/semester/year</span>
+};
+
+
+
+<span style="color: #557799">#endif </span><span style="color: #888888">// __course_h__</span>
+</pre></td></tr></table></div>

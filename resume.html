@@ -1,100 +1,149 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Resume</title>
-    <link rel="stylesheet" href="resume.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="index.css">
 </head>
+
 <body>
-    <h1>Resume</h1>
-    <div class="personal_info">
-        <h2>Madeline Payne</h2>
-        <p>madeline@mpayne.net</p>
-</div>
-<br/>
-<div class="education">
-    <h3>Education</h3>
-    <div>Tufts University, Medford, MA</div>
-    <ul class="list">
-        <li>Sept. 2015 - Present</li>
-        <li>Bachelor of Science in Computer Science</li>
-        <li>Minor in Entrepreneurial Leadership Studies</li>
-        <li>Nominated guest for Developing Leaders Conference</li>
-    </ul>
-    <div>North London Collegiate School</div>
-    <ul>
-        <li>Sept. 2007 - May 2015</li>
-        <li>Awarded International Baccalaureate Diploma in June 2015</li>
-        <li>IB Subjects: Biology HL, Chemistry HL, History HL, Mathematics SL, English SL, French SL.</li>
-    </ul>
-</div>
-<br/>
-<div class="experience">
-    <h3>Professional Experience</h3>
-    <div>Computer Science Teaching Assistant</div>
-    <ul class="list">
-        <li>Jan. 2017 - Present</li>
-        <li>Teach students a weekly assignment in a lab and answer follow up questions</li>
-        <li>Hold office hours to answer questions and explain concepts</li>
-        <li>Grade assignments on a weekly basis</li>
-    </ul>
-    <div>CS Intern, Active Standard, London, UK</div>
-    <ul>
-        <li>July 2014</li>
-        <li>Testing, identifying, and fixing bugs with the Quality Assurance department</li>
-        <li>Adapted to the ‘Agile’ business model</li>
-    </ul>
-    <div>Academic Tutor, NLCS, Edgware, UK</div>
-    <ul>
-        <li>Apr. 2014 - May 2015</li>
-        <li>Tutored several high school pupils in Biology, Chemistry and Physics for national GCSE exams</li>
-        <li>Students received A*s in the subject tutored</li>
-    </ul>
-    <div>CS Intern, Flipboard Inc., Palo Alto, CA, USA</div>
-    <ul>
-        <li>June 2013</li>
-        <li>Sorted customer orders with major companies for advert placements with the Engineering and Marketing staff</li>
-        <li>Wrote SQL queries to process orders for the Ad Marketing Dept.</li>
-    </ul>
-</div>
-<br/>
-<div class="skills">
-    <h3>Skills</h3>
-    <ul class="list">
-    <li>Computer Languages: Experience programming in C++ and C.</li>
-    <li>Languages: Proficient in Mandarin and French.</li>
-    </ul>
-</div>
-<br/>
-<div class="activities">
-    <h3>Activities</h3>
-    <div>Sports Editor and Writer, Tufts Daily Newspaper</div>
-    <ul>
-        <li>Sept. 2015 - Present</li>
-        <li>Edit articles twice weekly</li>
-        <li>Write 1-2 articles per week</li>
-    </ul>
-    <div>Club Treasurer, Association of Multiracial People at Tufts</div>
-    <ul>
-        <li>Sept. 2015 - Present</li>
-        <li>Developing annual budget, allocation of funding for events and tracking of expenditures.</li>
-        <li>Previously head of social media, promoting club events across several platforms</li>
-    </ul>
-    <div>Managing Director, NLCS Young Enterprise Club</div>
-    <ul>
-        <li>Sept. 2013 - Apr. 2014</li>
-        <li>Directed a company of 30 pupils to develop, produce and sell a unique product</li>
-        <li>Won West London Awards for Best Company Report</li>
-    </ul>
-    
-</div>
-<br/>
-<div class ="link_box">
-    <nav>
-        <a href="index.html">Home</a>
-        <br/>
-        <!-- <a href="#bio">Bio</a> -->
-        <a href="bio.html">Bio</a>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.html">MADELINE PAYNE</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="bio.html">Bio</a></li>
+                <li><a href="resume.html">Resume</a></li>
+                <li><a href="codesamples/index.html">Code Samples</a></li>
+            </ul>
+        </div>
     </nav>
-</div>
+    <h1>Resume</h1>
+    <div class="resume-container">
+        <div class="resume-subsection">
+            <h3>Education</h3>
+            <div class="subsection-content">
+                <h5>Tufts University, Medford, MA</h5>
+                <ul>
+                    <li>Sept. 2015 - Present</li>
+                    <li>Bachelor of Science in Computer Science</li>
+                    <li>Dean's List: Fall 2015, Spring 2017</li>
+                    <li>Nominated guest for Developing Leaders Conference</li>
+                </ul>
+                <h5>North London Collegiate School, London, UK</h5>
+                <ul>
+                    <li>Sept. 2007 - May 2015</li>
+                    <li>Awarded International Baccalaureate Diploma in June 2015</li>
+                    <li>IB Subjects: Biology HL, Chemistry HL, History HL, Mathematics SL, English SL, French SL.</li>
+                </ul>
+            </div>
+        </div>
+        <br/>
+        <div class="resume-subsection">
+            <h3>Skills</h3>
+            <div class="subsection-content">
+                <ul class="list">
+                    <li>Computer Languages: Proficient in C++ and C. Experience with HTML/CSS, Javascript. Exposure to Python and NodeJS
+                    </li>
+                    <li>Languages: Proficient in Mandarin and French.</li>
+                </ul>
+            </div>
+        </div>
+        <br/>
+        <div class="resume-subsection">
+            <h3>Technical Experience</h3>
+            <div class="subsection-content">
+                <h5>Software Engineering Intern, Jaunt VR, California, USA</h5>
+                <ul>
+                    <li>June 2017-Aug 2017</li>
+                    <li>Implementing features in Jaunt Desktop Applications that were released in several builds (C++)</li>
+                    <li>Setting up testing suites for both unit and functional tests</li>
+                    <li>Competed in company Hackathon: <a href="http://hub.jauntvr.net">click here to see my project</a></li>
+                </ul>
+                <h5>Computer Science Teaching Assistant, Tufts University, MA, USA</h5>
+                <ul>
+                    <li>Jan. 2017 - Present</li>
+                    <li>Class taught in C++</li>
+                    <li>Teach students a weekly assignment in a lab and answer follow up questions</li>
+                    <li>Hold office hours to answer questions and explain concepts</li>
+                    <li>Grade assignments on a weekly basis</li>
+                </ul>
+                <h5>CS Intern, Active Standard, London, UK</h5>
+                <ul>
+                    <li>July 2014</li>
+                    <li>Testing, identifying, and fixing bugs with the Quality Assurance department</li>
+                    <li>Adapted to the ‘Agile’ business model</li>
+                </ul>
+                <h5>CS Intern, Flipboard Inc., Palo Alto, CA, USA</h5>
+                <ul>
+                    <li>June 2013</li>
+                    <li>Sorted customer orders with major companies for advert placements with the Engineering and Marketing staff</li>
+                    <li>Wrote SQL queries to process orders for the Ad Marketing Dept.</li>
+                </ul>
+            </div>
+        </div>
+        <br/>
+        <!--         <div class="resume-subsection">
+            <h3>Additional Experience</h3>
+            <div class="subsection-content">
+                <h5>Waitress, The Ninth (1 michelin star), London, UK</h5>
+                <ul>
+                    <li>May 2016-July 2016</li>
+                    <li> Managed 5-10 tables at any time, handled 40-50 covers between two people most nights</li>
+                    <li>Received positive customer service feedback on a regular basis</li>
+                </ul>
+                <h5>Academic Tutor, NLCS, Edgware, UK</h5>
+                <ul>
+                    <li>Apr. 2014 - May 2015</li>
+                    <li>Tutored several high school pupils in Biology, Chemistry and Physics for national GCSE exams</li>
+                    <li>Students received A*s in the subject tutored</li>
+                </ul>
+            </div>
+        </div>
+        <br/>
+ -->
+        <div class="resume-subsection">
+            <h3>Leadership Positions</h3>
+            <div class="subsection-content">
+                <h5>Executive Sports Editor, Tufts Daily Newspaper</h5>
+                <ul>
+                    <li>July 2017 - Present</li>
+                    <li>Oversee 10-20 student writers, edit and prepare content for publishing</li>
+                    <li>Train incoming writers and editors</li>
+                    <li>Assign articles on a weekly basis to set up coming week's content</li>
+                </ul>
+                <h5>Alumni Outreach Chair, Tufts Women in Computer Science</h5>
+                <ul>
+                    <li>May 2017 - Present</li>
+                    <li>Contact alumni to coordinate events to bring together past and current students</li>
+                    <li>Secure sponsorship and speakers for the WiCS Women In Tech Conference (Oct 2017)</li>
+                </ul>
+                <h5>Sports Editor and Writer, Tufts Daily Newspaper</h5>
+                <ul>
+                    <li>Sept 2015 - Present</li>
+                    <li>Edit articles twice weekly</li>
+                    <li>Write articles, interview players and coaches for weekly article</li>
+                </ul>
+                <h5>Club Treasurer, Association of Multiracial People at Tufts</h5>
+                <ul>
+                    <li>Sept 2015 - March 2017</li>
+                    <li>Developed annual budget, allocation of funding for events and tracking of expenditures</li>
+                    <li>Previously head of social media, promoting club events across several platforms</li>
+                </ul>
+                <h5>Managing Director, NLCS Young Enterprise Club </h5>
+                <ul>
+                    <li>Sept 2013 - August 2014</li>
+                    <li>Directed a company of 30 pupils to develop, produce and sell a unique product</li>
+                    <li>Won Greater London Awards for Best Company Report</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <br/>
 </body>
+
 </html>

@@ -1,0 +1,124 @@
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #997700; font-weight: bold">By:</span> Maddie Payne
+<span style="color: #997700; font-weight: bold">Date:</span> <span style="color: #0000DD; font-weight: bold">20</span><span style="color: #333333">/</span>Oct<span style="color: #333333">/</span><span style="color: #0000DD; font-weight: bold">16</span>
+
+Correctly implemented<span style="color: #333333">:</span> Compression into codewords from RGB, decompression from 
+codewords back into RGB format. 
+
+I also correctly implemented <span style="color: #008800; font-weight: bold">static</span>
+<span style="color: #008800; font-weight: bold">inline</span> functions in the bitpack interface to account <span style="color: #008800; font-weight: bold">for</span> when the lsb
+is passed in as <span style="color: #6600EE; font-weight: bold">64.</span> However I decided that using them made my code
+incredibly difficult to understand and instead put simple checks
+to <span style="color: #008800; font-weight: bold">return</span> <span style="color: #0000DD; font-weight: bold">0</span> in the <span style="color: #333399; font-weight: bold">unsigned</span> function and <span style="color: #0000DD; font-weight: bold">1</span> in the <span style="color: #333399; font-weight: bold">signed</span> function.
+I left the <span style="color: #008800; font-weight: bold">static</span> <span style="color: #008800; font-weight: bold">inline</span> functions in the code so that you can see that 
+they have been properly written.
+
+List of files<span style="color: #333333">:</span>
+convertColorSpace.h
+convertColorSpace.c
+compressDecompress.h
+compressDecompress.c
+a2plain.c
+a2blocked.c
+a2methods.h
+a2methods.c
+<span style="color: #0000DD; font-weight: bold">40</span>image.c
+<span style="color: #0000DD; font-weight: bold">40</span>image.h
+UnpackedData.h
+Chromacity.h
+bitpack.c
+bitpack.h
+
+<span style="color: #997700; font-weight: bold">Architecture:</span>
+I have three interfaces<span style="color: #333333">:</span>
+convertColorSpace, compressDecompress, and bitpack
+
+The interface convertColorSpace has functions that convert an image from
+RBG to component video or vice versa. 
+
+The interface compressDecompress does the actual compressing, DCT, and
+shrinking of the image, as well as the packing of the word, as well as all
+of those inverse operations <span style="color: #008800; font-weight: bold">for</span> decompressing.
+
+When I compress an image, I call converColorSpace functions that
+converts it into component video color space.
+compressDecompress takes the image and shrinks a <span style="color: #0000DD; font-weight: bold">2</span>x2 block into one pixel
+with information stored in <span style="color: #008800; font-weight: bold">struct</span>
+UnpackedData a,b,c,d, avPb, avPr, which are the averages
+of Pb and Pr from the fmy blocks and a,b,c,d are calculated using 
+discrete cosine transform. The function shrinkBlocks calls 
+calculateAverage <span style="color: #008800; font-weight: bold">for</span> every fmy pixels in the image. I pack it.
+After that, I write the <span style="color: #0000DD; font-weight: bold">32</span> bit words to stdout using mapping.
+
+When decompressing an image, take in the text file and put
+the input into codeword format within a Pnm_ppm.
+I then unpack the words and the data stored in the words
+in the text file into my UnpackedData <span style="color: #008800; font-weight: bold">struct</span> that I store in
+the pixmap. Then reverse the transformation by
+converting from the <span style="color: #0000DD; font-weight: bold">32</span><span style="color: #333333">-</span>bit word to local variables in the UnpackedData <span style="color: #008800; font-weight: bold">struct</span>.
+After that, take the pixmap and scale it back up into the original size
+using growPixmap  and calculate each pixel<span style="color: #FF0000; background-color: #FFAAAA">&#39;</span>s y value using distributeAverage
+that uses inverse DCT as well as distributing the average Pb
+and Pr to all fmy pixels. Then use convertColorSpace to put it back in
+RGB format and print it to stdout.
+</pre></td></tr></table></div>

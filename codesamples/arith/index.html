@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Code Samples</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <style type="text/css" media="screen">
+    div.links {
+        display: inline-flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 4px;
+        flex-wrap: wrap;
+    }
+    
+    div.links div {
+        flex: 0 1 auto;
+        cursor: pointer;
+        margin: 10px;
+        /*border: 1px #eee inset;*/
+    }
+    
+    div.links div.current {
+        border-bottom: 4px lightblue solid;
+    }
+    </style>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.html">MADELINE PAYNE</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../../bio.html">Bio</a></li>
+                <li><a href="../../resume.html">Resume</a></li>
+                <li><a href="../index.html">Code Samples</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="header">
+        <h1>Arith</h1>
+        <p>Arith is a project from Machine Structures and Programming that is widely regarded as the most difficult assignment in the course.</p>
+    </div>
+    <div class="links">
+        <div data-url="README.html">README</div>
+        <div data-url="40image_cpp.html">40image_cpp</div>
+        <div data-url="a2blocked_c.html">a2blocked_c</div>
+        <div data-url="a2methods_h.html">a2methods_h</div>
+        <div data-url="a2plain_c.html">a2plain_c</div>
+        <div data-url="bitpack_c.html">bitpack_c</div>
+        <div data-url="bitpack_h.html">bitpack_h</div>
+        <div data-url="compressDecompress_c.html">compressDecompress_c</div>
+        <div data-url="convertColorSpace_c.html">convertColorSpace_c</div>
+        <div data-url="convertColorSpace_h.html">convertColorSpace_h</div>
+        <div data-url="chromacity_h.html">chromacity_h</div>
+        <div data-url="unpackedData_h.html">unpackedData_h</div>
+    </div>
+    <div id="code"></div>
+    <script type="text/javascript" charset="utf-8">
+    $('[data-url]').on('click', function(event) {
+        var e = $(this);
+        var url = e.attr('data-url');
+        console.log("URL: ", url);
+        $("#code").load(url + "?" + (new Date()).getTime())
+        e.addClass('current').siblings().removeClass('current');
+    })
+
+    // pretend we clicked the first element
+    $('[data-url]').eq(0).trigger('click');
+    </script>
+</body>
+
+</html>

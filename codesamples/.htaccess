@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Restricted Content"
+AuthUserFile /home/jpayne/codesamples-passwd
+Require valid-user

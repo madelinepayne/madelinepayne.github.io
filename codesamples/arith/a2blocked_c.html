@@ -1,0 +1,202 @@
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #888888">/*</span>
+<span style="color: #888888">    By: Madeline Payne</span>
+<span style="color: #888888">    Method suite for functions relating to the blocked implementation of a </span>
+<span style="color: #888888">    UArray.</span>
+<span style="color: #888888"> */</span>
+
+<span style="color: #557799">#include &lt;string.h&gt;</span>
+<span style="color: #557799">#include &lt;a2blocked.h&gt;</span>
+<span style="color: #557799">#include &quot;uarray2b.h&quot;</span>
+
+<span style="color: #888888">// define a private version of each function in A2Methods_T that we implement</span>
+
+<span style="color: #008800; font-weight: bold">typedef</span> A2Methods_UArray2 A2;   <span style="color: #888888">// private abbreviation</span>
+
+<span style="color: #008800; font-weight: bold">static</span> A2 <span style="color: #0066BB; font-weight: bold">new</span>(<span style="color: #333399; font-weight: bold">int</span> width, <span style="color: #333399; font-weight: bold">int</span> height, <span style="color: #333399; font-weight: bold">int</span> size)
+{
+        <span style="color: #008800; font-weight: bold">return</span> UArray2b_new_64K_block(width, height, size);
+}
+
+<span style="color: #008800; font-weight: bold">static</span> A2 <span style="color: #0066BB; font-weight: bold">new_with_blocksize</span>(<span style="color: #333399; font-weight: bold">int</span> width, <span style="color: #333399; font-weight: bold">int</span> height, <span style="color: #333399; font-weight: bold">int</span> size, <span style="color: #333399; font-weight: bold">int</span> blocksize)
+{
+        <span style="color: #008800; font-weight: bold">return</span> UArray2b_new(width, height, size, blocksize);
+}
+
+<span style="color: #008800; font-weight: bold">static</span> <span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">a2free</span>(A2 <span style="color: #333333">*</span> array2p)
+{
+        UArray2b_free((UArray2b_T <span style="color: #333333">*</span>) array2p);
+}
+
+<span style="color: #008800; font-weight: bold">static</span> <span style="color: #333399; font-weight: bold">int</span> <span style="color: #0066BB; font-weight: bold">width</span>(A2 array2)
+{
+        <span style="color: #008800; font-weight: bold">return</span> UArray2b_width(array2);
+}
+<span style="color: #008800; font-weight: bold">static</span> <span style="color: #333399; font-weight: bold">int</span> <span style="color: #0066BB; font-weight: bold">height</span>(A2 array2)
+{
+        <span style="color: #008800; font-weight: bold">return</span> UArray2b_height(array2);
+}
+<span style="color: #008800; font-weight: bold">static</span> <span style="color: #333399; font-weight: bold">int</span> <span style="color: #0066BB; font-weight: bold">size</span>(A2 array2)
+{
+        <span style="color: #008800; font-weight: bold">return</span> UArray2b_size(array2);
+}
+<span style="color: #008800; font-weight: bold">static</span> <span style="color: #333399; font-weight: bold">int</span> <span style="color: #0066BB; font-weight: bold">blocksize</span>(A2 array2)
+{
+        <span style="color: #008800; font-weight: bold">return</span> UArray2b_blocksize(array2);
+}
+
+<span style="color: #008800; font-weight: bold">static</span> A2Methods_Object <span style="color: #333333">*</span><span style="color: #0066BB; font-weight: bold">at</span>(A2 array2, <span style="color: #333399; font-weight: bold">int</span> i, <span style="color: #333399; font-weight: bold">int</span> j)
+{
+        <span style="color: #008800; font-weight: bold">return</span> UArray2b_at(array2, i, j);
+}
+
+<span style="color: #008800; font-weight: bold">typedef</span> <span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">applyfun</span>(<span style="color: #333399; font-weight: bold">int</span> i, <span style="color: #333399; font-weight: bold">int</span> j, UArray2b_T array2b, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>elem, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl);
+
+<span style="color: #008800; font-weight: bold">static</span> <span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">map_block_major</span>(A2 array2, A2Methods_applyfun apply, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl)
+{
+        UArray2b_map(array2, (applyfun <span style="color: #333333">*</span>) apply, cl);
+}
+
+<span style="color: #008800; font-weight: bold">struct</span> small_closure {
+        A2Methods_smallapplyfun <span style="color: #333333">*</span>apply;
+        <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl;
+};
+
+<span style="color: #008800; font-weight: bold">static</span> <span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">apply_small</span>(<span style="color: #333399; font-weight: bold">int</span> i, <span style="color: #333399; font-weight: bold">int</span> j, UArray2b_T array2, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>elem, <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>vcl)
+{
+        <span style="color: #008800; font-weight: bold">struct</span> small_closure <span style="color: #333333">*</span>cl <span style="color: #333333">=</span> vcl;
+        (<span style="color: #333399; font-weight: bold">void</span>)i;
+        (<span style="color: #333399; font-weight: bold">void</span>)j;
+        (<span style="color: #333399; font-weight: bold">void</span>)array2;
+        cl<span style="color: #333333">-&gt;</span>apply(elem, cl<span style="color: #333333">-&gt;</span>cl);
+}
+
+<span style="color: #008800; font-weight: bold">static</span> <span style="color: #333399; font-weight: bold">void</span> <span style="color: #0066BB; font-weight: bold">small_map_block_major</span>(A2 a2, A2Methods_smallapplyfun apply,
+                                  <span style="color: #333399; font-weight: bold">void</span> <span style="color: #333333">*</span>cl)
+{
+        <span style="color: #008800; font-weight: bold">struct</span> small_closure mycl <span style="color: #333333">=</span> { apply, cl };
+        UArray2b_map(a2, apply_small, <span style="color: #333333">&amp;</span>mycl);
+}
+
+<span style="color: #008800; font-weight: bold">static</span> <span style="color: #008800; font-weight: bold">struct</span> A2Methods_T uarray2_methods_blocked_struct <span style="color: #333333">=</span> {
+        new,
+        new_with_blocksize,
+        a2free,
+        width,
+        height,
+        size,
+        blocksize,
+        at,
+        <span style="color: #007020">NULL</span>,                   <span style="color: #888888">// map_row_major</span>
+        <span style="color: #007020">NULL</span>,                   <span style="color: #888888">// map_col_major</span>
+        map_block_major,
+        map_block_major,        <span style="color: #888888">// map_default</span>
+        <span style="color: #007020">NULL</span>,                   <span style="color: #888888">// small_map_row_major</span>
+        <span style="color: #007020">NULL</span>,                   <span style="color: #888888">// small_map_col_major</span>
+        small_map_block_major,
+        small_map_block_major,  <span style="color: #888888">// small_map_default</span>
+};
+
+<span style="color: #888888">// finally the payoff: here is the exported pointer to the struct</span>
+
+A2Methods_T uarray2_methods_blocked <span style="color: #333333">=</span> <span style="color: #333333">&amp;</span>uarray2_methods_blocked_struct;
+</pre></td></tr></table></div>

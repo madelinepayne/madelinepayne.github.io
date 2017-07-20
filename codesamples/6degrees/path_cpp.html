@@ -1,0 +1,128 @@
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #888888">/*</span>
+<span style="color: #888888">    Path</span>
+<span style="color: #888888">    By: Madeline Payne</span>
+<span style="color: #888888">    This class contains a pathelement struct which makes up one member of any</span>
+<span style="color: #888888">    path that is being made between two people. It contains other functions</span>
+<span style="color: #888888">    related to manipulating the path elements.</span>
+
+<span style="color: #888888"> */</span>
+<span style="color: #557799">#include &lt;iostream&gt;</span>
+<span style="color: #557799">#include &lt;string&gt;</span>
+<span style="color: #557799">#include &quot;Path.h&quot;</span>
+<span style="color: #557799">#include &quot;Course.h&quot;</span>
+<span style="color: #557799">#include &quot;Person.h&quot;</span>
+using namespace std;
+
+<span style="color: #888888">// purpose: adds given element to the end of the path</span>
+<span style="color: #888888">// args: PathElement to be added</span>
+<span style="color: #888888">// rets: none</span>
+<span style="color: #333399; font-weight: bold">void</span> Path<span style="color: #333333">::</span>add(PathElement new_element)
+{
+    elements.push_back(new_element);
+}
+
+<span style="color: #888888">// purpose: accessor for size of path</span>
+<span style="color: #888888">// args: none</span>
+<span style="color: #888888">// rets: int (size)</span>
+<span style="color: #333399; font-weight: bold">int</span> Path<span style="color: #333333">::</span>get_size()
+{
+    <span style="color: #008800; font-weight: bold">return</span> elements.size();
+}
+
+<span style="color: #888888">// purpose: checks whether given element is in the list</span>
+<span style="color: #888888">// args: element to checks</span>
+<span style="color: #888888">// rets: true or false</span>
+<span style="color: #333399; font-weight: bold">bool</span> Path<span style="color: #333333">::</span>in_list(PathElement e)
+{
+
+    <span style="color: #008800; font-weight: bold">for</span> (<span style="color: #333399; font-weight: bold">unsigned</span> <span style="color: #333399; font-weight: bold">long</span> i <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>; i <span style="color: #333333">&lt;</span> elements.size(); i<span style="color: #333333">++</span>) {
+        PathElement <span style="color: #333333">*</span>pe <span style="color: #333333">=</span> <span style="color: #333333">&amp;</span>elements[i];
+        <span style="color: #008800; font-weight: bold">if</span> (pe<span style="color: #333333">-&gt;</span>person <span style="color: #333333">==</span> e.person <span style="color: #333333">&amp;&amp;</span> pe<span style="color: #333333">-&gt;</span>course <span style="color: #333333">==</span> e.course)
+        {
+            <span style="color: #008800; font-weight: bold">return</span> <span style="color: #007020">true</span>;
+        }
+    }
+    <span style="color: #008800; font-weight: bold">return</span> <span style="color: #007020">false</span>;
+}
+
+<span style="color: #888888">// purpose: prints out the path</span>
+<span style="color: #888888">// args: none</span>
+<span style="color: #888888">// rets: none</span>
+<span style="color: #333399; font-weight: bold">void</span> Path<span style="color: #333333">::</span>print_path()
+{
+    <span style="color: #008800; font-weight: bold">const</span> <span style="color: #333399; font-weight: bold">unsigned</span> <span style="color: #333399; font-weight: bold">long</span> size <span style="color: #333333">=</span> elements.size();
+    <span style="color: #008800; font-weight: bold">for</span> (<span style="color: #333399; font-weight: bold">unsigned</span> <span style="color: #333399; font-weight: bold">long</span> i <span style="color: #333333">=</span> <span style="color: #0000DD; font-weight: bold">0</span>; i <span style="color: #333333">&lt;</span> size <span style="color: #333333">-</span> <span style="color: #0000DD; font-weight: bold">1</span>; i<span style="color: #333333">++</span>) {
+        <span style="color: #008800; font-weight: bold">if</span> (elements[i].person <span style="color: #333333">!=</span> <span style="color: #007020">NULL</span>) {
+            cout <span style="color: #333333">&lt;&lt;</span> elements[i].person<span style="color: #333333">-&gt;</span>get_name() <span style="color: #333333">&lt;&lt;</span> <span style="background-color: #fff0f0">&quot; +- &quot;</span>;
+        } <span style="color: #008800; font-weight: bold">else</span> {
+            cout <span style="color: #333333">&lt;&lt;</span> elements[i].course<span style="color: #333333">-&gt;</span>get_ID() <span style="color: #333333">&lt;&lt;</span> <span style="background-color: #fff0f0">&quot; -&gt; &quot;</span>;
+        }
+    }
+
+    cout <span style="color: #333333">&lt;&lt;</span> elements[size <span style="color: #333333">-</span> <span style="color: #0000DD; font-weight: bold">1</span>].person<span style="color: #333333">-&gt;</span>get_name();
+    cout <span style="color: #333333">&lt;&lt;</span> endl;
+}
+</pre></td></tr></table></div>

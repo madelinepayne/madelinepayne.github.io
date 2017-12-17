@@ -1,12 +1,13 @@
 body {
         background: #FFF8DC;
         font-family: Rockwell;
-        text-align: center;
+        /*text-align: center;*/
 }
 
 .text {
-        display: inline-block;
-        width: 75%;
+        /*display: inline-block;*/
+        margin: auto;
+        width: 30%;
         height: auto;
         border-width: 5px;
         border-style: dashed;
